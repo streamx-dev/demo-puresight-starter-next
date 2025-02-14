@@ -1,5 +1,5 @@
 module "tf_state_backend" {
-  source = "/Users/marekczajkowski/workspace/demo-puresight-starter-next/terraform/azure/state-backend"
+  source = "/Users/marekczajkowski/workspace/terraform-azurerm-platform/modules/state-backend"
   #version = "0.0.1"
 
   resource_group_name            = var.resource_group_name

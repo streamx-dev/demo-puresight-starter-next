@@ -47,13 +47,16 @@ Prerequisites:
 
 ### Prerquisites:
 
-* Azure Subscription with following registered Resource
-  providers (https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider):
-  resource provider - description why it is required
-* Azure Enterprise application for Azure resources setup with following roles:
-  role - description why it is required
-* Azure Enterprise application used as AKS identity with following roles:
-  role - description why it is requires
+* Azure Subscription with following registered [Resource
+  providers](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider) :
+  + Microsoft.Storage - required to create storage for terraform state backend
+  + two
+* [Azure Enterprise Application](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret#creating-a-service-principal-in-the-azure-portal) for Azure resources setup by terraform scripts with following roles:
+  + Contributor (from Privileged Administrator Roles) - Grants full access to manage all resources, but does not allow you to assign roles in Azure RBAC, manage assignments in Azure Blueprints, or share image galleries.
+  + 
+* [Azure Resource Group](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/manage-resource-groups-portal#create-resource-groups) This group should be used across all cloud setup steps
+* [Azure Managed identity](https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp#create-a-user-assigned-managed-identity) with following roles:
+  + Network Contributor - Required to create public static IP. Lets you manage networks, but not access to them.
 * GH Repository secrets and configs admin account
 * StreamX CLI in preview version
 
@@ -83,27 +86,11 @@ data in [`terraform/azure/.env`](terraform/azure/.env).
    > **Variables:**
    > * `TF_VAR_user_identity_id` - Azure Managed User Identity ID used for creating and managing
        cluster used by Terraform scripts from this repository. If not set System managed user will
-       be used and no static public ip could be used.
-   > * `TF_VAR_resource_group_name` - Azure Resource Group name used for all resources created by
-       Terraform scripts from this repository.
+       be used and no static public ip could be used. On Azure Managed Identity Overview (identity from prerequisite) switch to JSON view and copy Resource ID.
+   > * `TF_VAR_resource_group_name` - Azure Resource Group name which was created as prerequisite
    > * `TF_VAR_location` - Azure location used for all resources created by Terraform scripts from
        this repository.
-5. Setup Azure Resource Group used for StreamX Platform deployment
-   using [Terraform script](terraform/azure/resource-group).
-   > **Note:** This step is optional. Resource group can be created manually by Azure Administrator.
-    1. Load Azurerm provider authentication data:
-       ```shell
-       source scripts/env/cloud/read-infra-env.sh terraform/azure/.env
-       ```
-    2. Initialize Terraform script:
-       ```shell
-       terraform -chdir="terraform/azure/resource-group" init
-       ```
-    3. Apply Terraform script:
-       ```shell
-       terraform -chdir="terraform/azure/resource-group" apply
-       ```
-6. Setup [Azure based Terraform state backend](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
+5. Setup [Azure based Terraform state backend](https://learn.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
 using [Terraform script](terraform/azure/state-backend)
    1. Load Azurerm provider authentication data:
     ```shell
