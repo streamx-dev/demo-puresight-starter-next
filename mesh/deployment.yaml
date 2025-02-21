@@ -30,7 +30,7 @@ delivery:
         - host: ${streamx.accelerator.web.host}
           paths:
             - servicePort: 80
-            - path: /*
+              path: /*
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
