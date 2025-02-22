@@ -6,6 +6,9 @@ service:
 
 ingress-controller:
   enabled: true
+  config:
+    ingressStatusAddress:
+      - 52.157.197.105
 
 dashboard:
   enabled: true
