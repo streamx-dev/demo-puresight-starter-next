@@ -10,6 +10,7 @@ spec:
           - demo-puresight-starter.streamx.site
         paths:
           - /homepage.html
+          - /sitemap.xml
           - /assets/*
           - /web-resources/*
           - /fragments/*
