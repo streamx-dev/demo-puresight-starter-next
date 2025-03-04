@@ -1,0 +1,108 @@
+name: 'Azure: Deploy StreamX Large'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Setup Terraform"
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.4"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - name: Set up homebrew
+        uses: 'Homebrew/actions/setup-homebrew@master'
+
+      - name: Install StreamX via Homebrew
+        run: |
+          brew install streamx-dev/preview-tap/streamx
+
+      - name: Prepare Kubernetes secrets
+        env:
+          SX_SEC_AUTH_PRIVATE_KEY: ${{ secrets.SX_SEC_AUTH_PRIVATE_KEY }}
+          BLUEPRINT_WEB_TLS_CERT: ${{ secrets.BLUEPRINT_WEB_TLS_CERT }}
+          BLUEPRINT_SEARCH_TLS_CERT: ${{ secrets.BLUEPRINT_SEARCH_TLS_CERT }}
+          REST_INGESTION_TLS_CERT: ${{ secrets.REST_INGESTION_TLS_CERT }}
+        run: |
+          mkdir -p gateway/tls
+          mkdir -p mesh/auth
+          
+          if [ -n "$SX_SEC_AUTH_PRIVATE_KEY" ]; then
+            echo "$SX_SEC_AUTH_PRIVATE_KEY" > mesh/auth/sx-sec-auth-private-key.yaml
+          fi
+
+          if [ -n "$BLUEPRINT_WEB_TLS_CERT" ]; then
+            echo "$BLUEPRINT_WEB_TLS_CERT" > gateway/tls/blueprint-web.crt.yaml
+          fi
+
+          if [ -n "$BLUEPRINT_SEARCH_TLS_CERT" ]; then
+            echo "$BLUEPRINT_SEARCH_TLS_CERT" > gateway/tls/blueprint-search.crt.yaml
+          fi
+
+          if [ -n "$REST_INGESTION_TLS_CERT" ]; then
+            echo "$REST_INGESTION_TLS_CERT" > gateway/tls/rest-ingestion.crt.yaml
+          fi    
+
+      - name: "Deploy StreamX"
+        id: deploy-streamx
+        env:
+          ARM_ACCESS_KEY:
+            ${{ secrets.ARM_ACCESS_KEY }}
+          ARM_CLIENT_ID:
+            ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET:
+            ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_TENANT_ID:
+            ${{ secrets.ARM_TENANT_ID }}
+          ARM_SUBSCRIPTION_ID:
+            ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          TF_VAR_resource_group_name:
+            ${{ vars.TF_VAR_RESOURCE_GROUP_NAME }}
+          TF_VAR_location:
+            ${{ vars.TF_VAR_location }}
+          TF_VAR_user_identity_id:
+            ${{ vars.TF_VAR_USER_IDENTITY_ID }}
+          TF_VAR_public_ip_address:
+            ${{ vars.TF_VAR_PUBLIC_IP_ADDRESS }}
+          TF_VAR_public_ip_id:
+            ${{ vars.TF_VAR_PUBLIC_IP_ID }}
+          TF_VAR_cert_manager_lets_encrypt_issuer_acme_email:
+            ${{ vars.TF_VAR_cert_manager_lets_encrypt_issuer_acme_email }}
+          TF_VAR_cert_manager_lets_encrypt_issuer_prod_letsencrypt_server:
+            ${{ vars.TF_VAR_cert_manager_lets_encrypt_issuer_prod_letsencrypt_server }}
+          TF_VAR_streamx_operator_image_pull_secret_registry_email:
+            ${{ vars.TF_VAR_streamx_operator_image_pull_secret_registry_email }}
+          TF_VAR_streamx_operator_image_pull_secret_registry_password:
+            ${{ secrets.TF_VAR_streamx_operator_image_pull_secret_registry_password }}
+          STREAMX_ENVIRONMENT_SIZE: "large"
+          TF_VAR_streamx_environment_size: ${{ vars.STREAMX_ENVIRONMENT_SIZE }}
+        run: |
+          terraform/scripts/deploy-streamx.sh
+          echo "kubeconfig_path=$(terraform -chdir=./terraform/azure/platform output -raw kubeconfig_path)" >> $GITHUB_OUTPUT
+          echo "streamx_ingress_ip=$(terraform -chdir=./terraform/azure/platform output -raw loadbalancer_ip)" >> $GITHUB_OUTPUT
+
+      - name: "Ingest content"
+        run: terraform/scripts/cloud-publish-all.sh
+
+      - name: "Create Job Summary"
+        env:
+          KUBECONFIG: ${{ steps.deploy-streamx.outputs.kubeconfig_path }}
+        run: |
+          WEB_HOST=$(kubectl get ingress sx-del-blueprint-web -o jsonpath='{.spec.rules[0].host}')
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Deployment Status: Success ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Demo URL: https://$WEB_HOST" >> $GITHUB_STEP_SUMMARY
+          echo "- Load balancer IP: ${{ steps.deploy-streamx.outputs.streamx_ingress_ip }}" >> $GITHUB_STEP_SUMMARY
