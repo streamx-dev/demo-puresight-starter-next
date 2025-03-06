@@ -16,7 +16,6 @@ module "azure_platform" {
   cluster_default_node_pool_vm_size        = local.vm_sizes[var.streamx_environment_size]
   cluster_default_node_pool_node_count     = 3
   cluster_default_node_pool_node_max_count = 5
-
   location             = var.location
   resources_group_name = var.resource_group_name
   kubeconfig_path      = "${path.module}/.env/kubeconfig"
@@ -30,25 +29,32 @@ module "apisix" {
   values = [
     file("${path.module}/config/gateway/values.yaml")
   ]
-
   settings = var.public_ip_address != null && var.public_ip_address != "" ? {
     "service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group" : var.resource_group_name
     "service.loadBalancerIP" : var.public_ip_address
   } : {}
+
+  depends_on = [module.azure_platform]
 }
 
 module "monitoring_tempo" {
   source                            = "./modules/monitoring-tempo"
+
   monitoring_storage_container_name = var.monitoring_storage_container_name
   monitoring_storage_account_name   = var.monitoring_storage_account_name
   monitoring_storage_access_key     = var.monitoring_storage_access_key
+
+  depends_on = [module.azure_platform]
 }
 
 module "monitoring_loki" {
   source                            = "./modules/monitoring-loki"
+
   monitoring_storage_container_name = var.monitoring_storage_container_name
   monitoring_storage_account_name   = var.monitoring_storage_account_name
   monitoring_storage_access_key     = var.monitoring_storage_access_key
+
+  depends_on = [module.azure_platform]
 }
 
 module "streamx" {
@@ -66,17 +72,21 @@ module "streamx" {
   streamx_operator_image_pull_secret_registry_password = var.streamx_operator_image_pull_secret_registry_password
   streamx_operator_chart_repository_username           = "_json_key_base64"
   streamx_operator_chart_repository_password           = var.streamx_operator_image_pull_secret_registry_password
-
   tempo_create_namespace = false
   tempo_values = [
     file("${path.module}/config/monitoring/tempo/values.yaml")
   ]
-
   loki_create_namespace = false
   loki_values = [
     file("${path.module}/config/monitoring/loki/values.yaml")
   ]
-
   minio_enabled = false
 
+  depends_on = [module.azure_platform, module.monitoring_loki, module.monitoring_tempo]
+}
+
+resource "kubectl_manifest" "grafana_apisix_route" {
+  yaml_body = file("${path.module}/config/gateway/routes/grafana.yaml")
+
+  depends_on = [module.apisix, module.streamx]
 }
