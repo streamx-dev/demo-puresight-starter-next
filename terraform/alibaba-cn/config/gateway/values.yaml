@@ -1,0 +1,50 @@
+global:
+  imagePullSecrets:
+    - streamx-demo-pull-secret
+
+image:
+  repository: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo/apisix
+  tag: 3.11.0-debian
+
+useDaemonSet: true
+
+service:
+  type: LoadBalancer
+
+initContainer:
+  image: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo/busybox
+  tag: 1.28
+
+apisix:
+  ssl:
+    enabled: true
+
+# Ingress Controller
+ingress-controller:
+  enabled: true
+  config:
+    ingressPublishService: ingress-apisix/apisix-gateway
+  image:
+    repository: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo/apisix-ingress-controller
+    tag: 1.8.0
+  initContainer:
+    image: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo/busybox
+    tag: 1.28
+  imagePullSecrets:
+    - name: streamx-demo-pull-secret
+
+# ETCD
+etcd:
+  global:
+    imagePullSecrets:
+      - streamx-demo-pull-secret
+  image:
+    registry: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com
+    repository: streamx-demo/etcd
+    tag: 3.5.10-debian-11-r2
+  persistence:
+    storageClass: alibabacloud-cnfs-nas
+
+# Dashboard
+dashboard:
+  enabled: false
