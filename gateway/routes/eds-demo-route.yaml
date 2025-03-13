@@ -22,22 +22,29 @@ spec:
           - demo-puresight-starter.streamx.site
         paths:
           - /edge-delivery-services-demo/*
-          - /assets/*
+          - /assets/images/avatars/*
           - /blocks/*
           - /components/*
           - /fonts/*
           - /libs/*
           - /scripts/*
+          - /styles/*
+          - /placeholders.json
           - /templates/*
           - /media*.png*
+          - /nav.plain.html
+          - /footer.plain.html
+          - /query-index.json
       priority: 10
       upstreams:
         - name: eds-demo-upstream
       plugins:
         - name: proxy-rewrite
-          regex_uri:
-            - "^/edge-delivery-services-demo/(.*)"
-            - "/edge-delivery-services-demo-next/$1"
+          enable: true
+          config:
+            regex_uri:
+              - "^/edge-delivery-services-demo/(.*)"
+              - "/edge-delivery-services-demo-next/$1"
         - name: response-rewrite
           enable: true
           config:
