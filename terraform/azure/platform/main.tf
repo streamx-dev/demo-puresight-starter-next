@@ -9,7 +9,7 @@ locals {
 
 module "azure_platform" {
   source  = "streamx-dev/platform/azurerm"
-  version = "0.0.3"
+  version = "0.0.4"
 
   resource_group_enabled                   = false
   cluster_name                             = var.cluster_name
@@ -49,6 +49,8 @@ module "monitoring_loki" {
   monitoring_storage_container_name = var.monitoring_storage_container_name
   monitoring_storage_account_name   = var.monitoring_storage_account_name
   monitoring_storage_access_key     = var.monitoring_storage_access_key
+
+  depends_on = [module.azure_platform]
 }
 
 module "streamx" {
@@ -77,6 +79,18 @@ module "streamx" {
     file("${path.module}/config/monitoring/loki/values.yaml")
   ]
 
+  prometheus_stack_settings = var.monitoring_grafana_host != null && var.monitoring_grafana_host != "" ? {
+    "grafana.ingress.enabled" : true
+    "grafana.ingress.hosts[0]" : var.monitoring_grafana_host
+    "grafana.ingress.paths[0]" : "/*"
+    "grafana.ingress.tls[0].secretName" : "grafana.crt"
+    "grafana.ingress.tls[0].hosts[0]" : var.monitoring_grafana_host
+    "grafana.ingress.annotations.cert-manager\\.io/cluster-issuer" : "letsencrypt-cert-cluster-issuer"
+  } : {}
+  prometheus_stack_grafana_admin_password = var.monitoring_grafana_admin_password
+
+
   minio_enabled = false
+  depends_on    = [module.azure_platform, module.monitoring_loki, module.monitoring_tempo]
 
 }
