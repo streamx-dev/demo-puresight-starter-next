@@ -22,6 +22,14 @@ spec:
           - demo-puresight-starter.streamx.site
         paths:
           - /edge-delivery-services-demo/*
+          - /assets/*
+          - /blocks/*
+          - /components/*
+          - /fonts/*
+          - /libs/*
+          - /scripts/*
+          - /templates/*
+          - /media*.png*
       priority: 10
       upstreams:
         - name: eds-demo-upstream
