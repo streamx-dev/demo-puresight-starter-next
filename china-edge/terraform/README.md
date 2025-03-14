@@ -14,6 +14,8 @@ Execute scripts from `./scripts` directory to setup registry images (you may nee
 To run this example you need to execute:
 
 ```bash
+source .env/var.terraform
+
 $ terraform init
 $ terraform plan
 $ terraform apply
