@@ -28,5 +28,14 @@ Note that this example will create resources which cost money. Run `terraform de
 To use Kubernetes Configuration in your shell, use the following command:
 
 ```bash
-export KUBECONFIG=.env/kubeconfig
+export KUBECONFIG=./terraform/.env/kubeconfig
 ```
+
+## Deploying a mesh
+
+With KUBECONFIG configured, you can invoke:
+
+```shell
+streamx deploy -f mesh/mesh.yaml
+```
+

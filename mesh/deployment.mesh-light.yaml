@@ -1,35 +1,63 @@
 defaults:
   global:
-    imagePullSecrets:
-      - name: "streamx-demo-pull-secret"
     resources:
       requests:
         cpu: 300m
         memory: 512Mi
   ingestion:
-    replicas: 0
+    replicas: ${streamx.default.ingestion.replicas}
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
   processing:
-    replicas: 0
+    replicas: ${streamx.default.processing.replicas}
   delivery:
-    replicas: 3
+    replicas: ${streamx.default.delivery.replicas}
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
 
+
+ingestion:
+  rest-ingestion:
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+      hosts:
+        - host: ${streamx.accelerator.ingestion.host}
+          paths:
+            - path: /*
+      tls:
+        - hosts:
+            - ${streamx.accelerator.ingestion.host}
+          secretName: rest-ingestion.crt
 delivery:
   blueprint-web:
     ingress:
       enabled: true
       hosts:
-        - host: china.streamx.site
+        - host: ${streamx.accelerator.web.host}
           paths:
             - servicePort: 8084
               path: /*
       tls:
         - hosts:
-            - china.streamx.site
-          secretName: china-blueprint-web.crt
+            - ${streamx.accelerator.web.host}
+          secretName: blueprint-web.crt
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
     probes:
+      readiness:
+        httpGet:
+          path: /q/health/ready
+          port: 8080
+        initialDelaySeconds: 3
+        timeoutSeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 3
       startup:
         httpGet:
           path: /q/health/started
@@ -76,14 +104,25 @@ delivery:
     ingress:
       enabled: true
       hosts:
-        - host: china.streamx.site
+        - host: ${streamx.accelerator.web.host}
           paths:
             - path: /search/*
       tls:
         - hosts:
-            - china.streamx.site
-          secretName: china-blueprint-web.crt
+            - ${streamx.accelerator.web.host}
+          secretName: blueprint-search.crt
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
     probes:
+      readiness:
+        httpGet:
+          path: /q/health/ready
+          port: 8080
+        initialDelaySeconds: 3
+        timeoutSeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        failureThreshold: 3
       startup:
         httpGet:
           path: /q/health/started

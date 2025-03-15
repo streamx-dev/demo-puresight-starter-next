@@ -26,6 +26,8 @@ module "streamx" {
   streamx_operator_chart_repository_username           = "_json_key_base64"
   streamx_operator_chart_repository_password           = var.streamx_operator_image_pull_secret_registry_password
 
+  # Disabling cert-manager-lets-encrypt
+  cert_manager_lets_encrypt_issuer_enabled    = false
   ingress_controller_nginx_enabled            = false
   loki_create_namespace                       = false
   loki_enabled                                = false
