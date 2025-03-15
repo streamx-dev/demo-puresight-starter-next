@@ -11,6 +11,8 @@ defaults:
   processing:
     replicas: 0
   delivery:
+    # Some wrong images get cached in China
+    imagePullPolicy: Always
     replicas: 3
     podDisruptionBudget:
       enabled: true
