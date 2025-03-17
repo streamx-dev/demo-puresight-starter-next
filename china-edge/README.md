@@ -15,3 +15,9 @@ and
 Follow README instructions:
 Infrastructure setup: `china/terraform/README.md`
 Mesh setup: `china/README.md`
+
+Infrastructure setup: `us/terraform/README.md`
+Mesh setup: `us/README.md`
+
+## Connect clusters using Linkerd
+Follow instructions from `linkerd`

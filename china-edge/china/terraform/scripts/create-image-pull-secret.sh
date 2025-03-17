@@ -1,5 +1,5 @@
-export KUBECONFIG=china-edge/terraform/.env/kubeconfig
-source china-edge/terraform/.env/var.container-registry
+export KUBECONFIG=china-edge/china/terraform/.env/kubeconfig
+source china-edge/china/terraform/.env/var.container-registry
 
 kubectl create secret docker-registry streamx-demo-pull-secret \
   --docker-server=crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com \
