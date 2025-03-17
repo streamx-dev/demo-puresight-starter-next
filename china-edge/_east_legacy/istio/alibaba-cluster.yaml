@@ -1,0 +1,17 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  components:
+    cni:
+      namespace: istio-system
+      enabled: true
+  values:
+    global:
+      hub: crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo
+      imagePullSecrets:
+        - streamx-demo-pull-secret
+      meshID: mesh1
+      multiCluster:
+        clusterName: cluster1
+      network: network1
+      externalIstiod: true

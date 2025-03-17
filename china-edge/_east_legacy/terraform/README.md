@@ -15,7 +15,7 @@ namespaces).
 To run this example you need to execute:
 
 ```bash
-source .env/var.terraform
+source china-edge/terraform/.env/var.terraform
 
 $ terraform init
 $ terraform plan
@@ -30,13 +30,21 @@ don't need these resources.
 To use Kubernetes Configuration in your shell, use the following command:
 
 ```bash
-export KUBECONFIG=./terraform/.env/kubeconfig
+export KUBECONFIG=china-edge/terraform/.env/kubeconfig
 ```
 
 ## Deploying a mesh
 
+Upload the certificate :
+
+```shell
+kubectl apply -f china-edge/mesh/tls/china-blueprint-web.crt
+```
+
+
 With KUBECONFIG configured, you can invoke:
 
 ```shell
-streamx deploy -f mesh/mesh.yaml
+streamx deploy -f china-edge/mesh/mesh.yaml
 ```
+

@@ -7,5 +7,5 @@ imagePullSecrets:
 messaging:
   pulsar:
     initImage: "crpi-ynub1f3ynqwgpy46.cn-hangzhou.personal.cr.aliyuncs.com/streamx-demo/pulsar-init:latest-jvm"
-    clientServiceUrl: "pulsar://pulsar-broker-azure.kaap.svc.cluster.local:6650"
-    adminServiceUrl: "http://pulsar-broker-azure.kaap.svc.cluster.local:8080"
+    clientServiceUrl: "pulsar://pulsar-broker.global:6650"
+    adminServiceUrl: "http://pulsar-broker.global:8080"

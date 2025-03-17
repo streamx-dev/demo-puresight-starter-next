@@ -1,0 +1,22 @@
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: pulsar-broker.global
+spec:
+  addresses:
+    - 240.0.0.10
+  endpoints:
+    - address: 128.251.180.96
+      ports:
+        http: 15443
+  hosts:
+    - pulsar-broker.global
+  location: MESH_INTERNAL
+  ports:
+    - name: http
+      number: 8080
+      protocol: http
+    - name: pulsar
+      number: 6650
+      protocol: TCP
+  resolution: DNS
