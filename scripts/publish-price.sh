@@ -28,7 +28,7 @@ cat <<EOF > "$TEMP_FILE"
 }
 EOF
 
-export QUARKUS_PROFILE=cloud,cms && streamx stream data "$TEMP_FILE"
+export QUARKUS_PROFILE=cloud,pim && streamx stream data "$TEMP_FILE"
 
 rm -f "$TEMP_FILE"
 
