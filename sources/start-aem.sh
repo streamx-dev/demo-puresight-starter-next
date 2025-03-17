@@ -35,4 +35,4 @@ echo "Starting AEM container with:"
 echo "  STREAMX_CLIENT_URL:       $STREAMX_CLIENT_URL"
 echo "  STREAMX_CLIENT_AUTH_TOKEN: [HIDDEN]"
 
-docker-compose -f "$dockerComposeFile" up -d
+docker compose -f "$dockerComposeFile" up -d
