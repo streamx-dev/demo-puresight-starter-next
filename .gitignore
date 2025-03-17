@@ -57,3 +57,4 @@ auth/*
 /china-edge/anchor/*
 /china-edge/_east_legacy/anchor/*
 /china-edge/_east_legacy/istio-mm/certs/*
+/china-edge/china/mesh/tls*
