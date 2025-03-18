@@ -60,3 +60,4 @@ auth/*
 /china-edge/china/mesh/tls*
 /china-edge/linkerd/anchor/*
 /china-edge/istio/certs/*
+/china-edge/istio/certs/
