@@ -1,9 +1,0 @@
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  profile: remote
-  values:
-    istiodRemote:
-      injectionPath: /inject/cluster/cluster2/net/network1
-    global:
-      remotePilotAddress: 118.178.89.161

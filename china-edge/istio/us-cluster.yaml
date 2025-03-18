@@ -5,5 +5,5 @@ spec:
     global:
       meshID: mesh1
       multiCluster:
-        clusterName: azure
+        clusterName: us
       network: network1

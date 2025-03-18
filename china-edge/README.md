@@ -19,5 +19,8 @@ Mesh setup: `china/README.md`
 Infrastructure setup: `us/terraform/README.md`
 Mesh setup: `us/README.md`
 
-## Connect clusters using Linkerd
+## [not working] Connect clusters using Linkerd
 Follow instructions from `linkerd`
+
+## [not working] Connect clusters using Istio
+Follow instructions from `istio`

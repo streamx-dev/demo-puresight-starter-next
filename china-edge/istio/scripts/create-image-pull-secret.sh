@@ -1,4 +1,5 @@
-source ./china-edge/istio/.env/var.container-registry
+export KUBECONFIG=china-edge/china/terraform/.env/kubeconfig
+source china-edge/china/terraform/.env/var.container-registry
 
 kubectl create namespace istio-system
 

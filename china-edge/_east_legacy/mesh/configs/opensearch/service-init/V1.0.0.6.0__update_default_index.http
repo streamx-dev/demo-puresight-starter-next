@@ -1,5 +1,0 @@
-PUT default/_settings
-
-{
-  "default_pipeline": "default-local"
-}
