@@ -40,7 +40,7 @@ cluster:
           cpu: "0.4"
         memory: "1Gi"
     proxy:
-      replicas: 0
+      replicas: 1
     autorecovery:
       replicas: 0
     bastion:
