@@ -24,7 +24,7 @@ ingestion:
       enabled: true
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
       hosts:
         - host: ${streamx.accelerator.ingestion.host}
           paths:
@@ -47,7 +47,7 @@ delivery:
             - ${streamx.accelerator.web.host}
           secretName: blueprint-web.crt
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
       readiness:
         httpGet:
@@ -112,7 +112,7 @@ delivery:
             - ${streamx.accelerator.web.host}
           secretName: blueprint-search.crt
       annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
       readiness:
         httpGet:
