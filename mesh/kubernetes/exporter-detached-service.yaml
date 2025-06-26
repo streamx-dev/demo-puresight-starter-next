@@ -39,7 +39,7 @@ kind: Ingress
 metadata:
   name: exporter-detached-service
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-cert-cluster-issuer
+    cert-manager.io/cluster-issuer: lets-encrypt-staging-cluster-issuer
 spec:
   ingressClassName: apisix
   tls:

@@ -7,7 +7,7 @@ defaults:
   ingestion:
     replicas: ${streamx.default.ingestion.replicas}
     podDisruptionBudget:
-      enabled: true
+      enabled: ${streamx.default.ingestion.podDisruptionBudget.enabled}
       minAvailable: 1
   processing:
     replicas: ${streamx.default.processing.replicas}
@@ -45,7 +45,7 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-web.crt
+          secretName: delivery.crt
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
@@ -110,7 +110,7 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-search.crt
+          secretName: delivery.crt
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
