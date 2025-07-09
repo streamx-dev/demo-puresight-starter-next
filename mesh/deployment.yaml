@@ -134,7 +134,7 @@ delivery:
         failureThreshold: 10
     components:
       opensearch:
-        sidecar: true
+        sidecar: false
         probes:
           readiness:
             httpGet:
@@ -164,4 +164,4 @@ delivery:
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
-            failureThreshold: 3
+            failureThreshold: 100
