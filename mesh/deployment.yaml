@@ -49,16 +49,16 @@ delivery:
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        # Failures should not put the service offline
-        failureThreshold: 604800
+      # readiness:
+      #   httpGet:
+      #     path: /q/health/ready
+      #     port: 8080
+      #   initialDelaySeconds: 3
+      #   timeoutSeconds: 2
+      #   periodSeconds: 5
+      #   successThreshold: 1
+      # Failures should not put the service offline
+      #   failureThreshold: 604800
       liveness:
         httpGet:
           path: /q/health/live
@@ -126,16 +126,16 @@ delivery:
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
+      # readiness:
+      #   httpGet:
+      #     path: /q/health/ready
+      #     port: 8080
+      #   initialDelaySeconds: 3
+      #   timeoutSeconds: 2
+      #   periodSeconds: 5
+      #   successThreshold: 1
         # Failures should not put the service offline
-        failureThreshold: 604800
+      #   failureThreshold: 604800
       liveness:
         httpGet:
           path: /q/health/live
