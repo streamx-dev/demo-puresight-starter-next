@@ -1,7 +1,17 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
 defaultImageTag: 2.0.4-jvm
 environment:
+  # Fixing buggy health check, it does not work when containers restarts
+  # Readiness check on the StreamX container is disabled, only the startup probe is configured
   STREAMX_DELIVERY_SERVICE_READINESS_CHECK_ENABLED: "false"
+  # Favor throughput and connection quality over latency
+  PULSAR_CLIENT_USETCPNODELAY: "false"
+  # The only exceptions we receive are caused by a TCP RST (Reset) - TCP/IP packets, probably caused
+  # by detecting SNI headers. Pulsar Client automatically retries such requests.
+  # It turns out that GFW is not blocking requests, Pulsar simply timeouts due to network quality or throttling
+  # The settings here is 600s - 20x the default value
+  # Startup probe has to wait longer than this setting
+  PULSAR_CLIENT_OPERATIONTIMEOUTMS: "600000"
 sources:
   github:
     outgoing:

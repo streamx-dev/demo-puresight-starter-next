@@ -16,6 +16,37 @@ defaults:
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
+    probes:
+      # readiness:
+      #   httpGet:
+      #     path: /q/health/ready
+      #     port: 8080
+      #   initialDelaySeconds: 3
+      #   timeoutSeconds: 2
+      #   periodSeconds: 5
+      #   successThreshold: 1
+      # Failures should not put the service offline
+      #   failureThreshold: 604800
+      liveness:
+        httpGet:
+          path: /q/health/live
+          port: 8080
+        initialDelaySeconds: 10
+        timeoutSeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        # Restart quick on exception to restore broken connection fast
+        failureThreshold: 1
+      startup:
+        httpGet:
+          path: /q/health/started
+          port: 8080
+        initialDelaySeconds: 10
+        timeoutSeconds: 2
+        periodSeconds: 10
+        successThreshold: 1
+        # Let's wait ~ 600 seconds for the connection to be established
+        failureThreshold: 60
 
 
 ingestion:
@@ -48,37 +79,6 @@ delivery:
           secretName: delivery.crt
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
-    probes:
-      # readiness:
-      #   httpGet:
-      #     path: /q/health/ready
-      #     port: 8080
-      #   initialDelaySeconds: 3
-      #   timeoutSeconds: 2
-      #   periodSeconds: 5
-      #   successThreshold: 1
-      # Failures should not put the service offline
-      #   failureThreshold: 604800
-      liveness:
-        httpGet:
-          path: /q/health/live
-          port: 8080
-        initialDelaySeconds: 10
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        # Restart quick on exception to restore broken connection fast
-        failureThreshold: 1
-      startup:
-        httpGet:
-          path: /q/health/started
-          port: 8080
-        initialDelaySeconds: 10
-        timeoutSeconds: 2
-        periodSeconds: 10
-        successThreshold: 1
-        # Let's wait ~ 110 seconds for the connection to be established
-        failureThreshold: 10
     components:
       webserver:
         probes:
@@ -125,37 +125,6 @@ delivery:
           secretName: delivery.crt
       annotations:
         cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
-    probes:
-      # readiness:
-      #   httpGet:
-      #     path: /q/health/ready
-      #     port: 8080
-      #   initialDelaySeconds: 3
-      #   timeoutSeconds: 2
-      #   periodSeconds: 5
-      #   successThreshold: 1
-        # Failures should not put the service offline
-      #   failureThreshold: 604800
-      liveness:
-        httpGet:
-          path: /q/health/live
-          port: 8080
-        initialDelaySeconds: 10
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        # Restart quick on exception to restore broken connection fast
-        failureThreshold: 1
-      startup:
-        httpGet:
-          path: /q/health/started
-          port: 8080
-        initialDelaySeconds: 10
-        timeoutSeconds: 2
-        periodSeconds: 10
-        successThreshold: 1
-        # Let's wait ~ 110 seconds for the connection to be established
-        failureThreshold: 10
     components:
       opensearch:
         sidecar: false
