@@ -9,8 +9,8 @@ environment:
   # The only exceptions we receive are caused by a TCP RST (Reset) - TCP/IP packets, probably caused
   # by detecting SNI headers. Pulsar Client automatically retries such requests.
   # It turns out that GFW is not blocking requests, Pulsar simply timeouts due to network quality or throttling
-  # The settings here is 600s - 20x the default value
-  # Startup probe has to wait longer than this setting
+  # During tests I've encountered situations where connection was established after 5 minutes,
+  # The settings here is 600s - 20x the default value. Startup probe has to wait longer than this setting
   PULSAR_CLIENT_OPERATIONTIMEOUTMS: "600000"
 sources:
   github:
