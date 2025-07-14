@@ -12,6 +12,12 @@ environment:
   # During tests I've encountered situations where connection was established after 5 minutes,
   # The settings here is 600s - 20x the default value. Startup probe has to wait longer than this setting
   PULSAR_CLIENT_OPERATIONTIMEOUTMS: "600000"
+  # It's important to use individual ACK, because cumulative may loos the messages on not-clear shutdown
+  "mp.messaging.incoming.assets.ack-strategy": "ack"
+  "mp.messaging.incoming.fragments.ack-strategy": "ack"
+  "mp.messaging.incoming.pages.ack-strategy": "ack"
+  "mp.messaging.incoming.web-resources.ack-strategy": "ack"
+
 sources:
   github:
     outgoing:
