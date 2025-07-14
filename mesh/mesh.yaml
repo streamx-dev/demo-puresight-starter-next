@@ -12,11 +12,6 @@ environment:
   # During tests I've encountered situations where connection was established after 5 minutes,
   # The settings here is 600s - 20x the default value. Startup probe has to wait longer than this setting
   PULSAR_CLIENT_OPERATIONTIMEOUTMS: "600000"
-  # It's important to use individual ACK, because cumulative may loos the messages on not-clear shutdown
-  "mp.messaging.incoming.assets.ack-strategy": "ack"
-  "mp.messaging.incoming.fragments.ack-strategy": "ack"
-  "mp.messaging.incoming.pages.ack-strategy": "ack"
-  "mp.messaging.incoming.web-resources.ack-strategy": "ack"
 
 sources:
   github:
@@ -253,6 +248,8 @@ delivery:
       configs:
         - "opensearch/service-init:/deployments/opensearch/service-init"
     environment:
+      "MP.MESSAGING.INCOMING.INDEXABLE-RESOURCES.ACK-STRATEGY": "ack"
+      "MP.MESSAGING.INCOMING.INDEXABLE-RESOURCE-FRAGMENTS.ACK-STRATEGY": "ack"
       QUARKUS_ELASTICSEARCH_USERNAME: "admin"
       QUARKUS_ELASTICSEARCH_HOSTS: "blueprint-search.opensearch:9201"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_MIGRATION-SCRIPT-LOCATIONS: "classpath:opensearch/service-init,file:opensearch/service-init"
@@ -286,6 +283,11 @@ delivery:
         topic: outboxes/web-resources
     environment:
       STREAMX_BLUEPRINTS_WEB-DELIVERY-SERVICE_RESOURCES_DIRECTORY: "/srv/www"
+      # It's important to use individual ACK, because cumulative may loos the messages on not-clear shutdown
+      MP_MESSAGING_INCOMING_ASSETS_ACK_STRATEGY: "ack"
+      MP_MESSAGING_INCOMING_FRAGMENTS_ACK_STRATEGY: "ack"
+      MP_MESSAGING_INCOMING_PAGES_ACK_STRATEGY: "ack"
+      MP_MESSAGING_INCOMING_WEB-RESOURCES_ACK_STRATEGY: "ack"
     repositoryVolume: "/srv/www"
     port: 8083
     components:
