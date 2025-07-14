@@ -27,16 +27,17 @@ defaults:
       #   successThreshold: 1
       # Failures should not put the service offline
       #   failureThreshold: 604800
-      # liveness:
-      #   httpGet:
-      #    path: /q/health/live
-      #    port: 8080
-      #  initialDelaySeconds: 10
-      #  timeoutSeconds: 2
-      #  periodSeconds: 5
-      #  successThreshold: 1
-      #  # Restart quick on exception to restore broken connection fast
-      #  failureThreshold: 1
+      liveness:
+        httpGet:
+          path: /q/health/live
+          port: 8080
+        initialDelaySeconds: 0
+        timeoutSeconds: 2
+        periodSeconds: 5
+        successThreshold: 1
+        # Restart quick on exception to restore broken connection fast
+        # NOTE: This may mark the node as not ready
+        failureThreshold: 1
       startup:
         httpGet:
           path: /q/health/started
