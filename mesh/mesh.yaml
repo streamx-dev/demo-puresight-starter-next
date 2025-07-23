@@ -255,6 +255,9 @@ delivery:
       QUARKUS_ELASTICSEARCH_HOSTS: "blueprint-search.opensearch:9201"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_MIGRATION-SCRIPT-LOCATIONS: "classpath:opensearch/service-init,file:opensearch/service-init"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
+      # Persist metadata state between restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/usr/share/opensearch/data"
     environmentFrom:
       secrets:
         - "opensearch-secrets.properties"
@@ -285,11 +288,14 @@ delivery:
         topic: outboxes/web-resources
     environment:
       STREAMX_BLUEPRINTS_WEB-DELIVERY-SERVICE_RESOURCES_DIRECTORY: "/srv/www"
-      # It's important to use individual ACK, because cumulative may loos the messages on not-clear shutdown
+      # It's important to use individual ACK, because cumulative may loss the messages on not-clear shutdown
       MP_MESSAGING_INCOMING_ASSETS_ACK_STRATEGY: "ack"
       MP_MESSAGING_INCOMING_FRAGMENTS_ACK_STRATEGY: "ack"
       MP_MESSAGING_INCOMING_PAGES_ACK_STRATEGY: "ack"
       MP_MESSAGING_INCOMING_WEB-RESOURCES_ACK_STRATEGY: "ack"
+      # Persist metadata state between restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/srv/www"
     repositoryVolume: "/srv/www"
     port: 8083
     components:
