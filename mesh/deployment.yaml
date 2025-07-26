@@ -54,32 +54,29 @@ ingestion:
   rest-ingestion:
     ingress:
       enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
+      ingressClassName: "istio"
       hosts:
         - host: ${streamx.accelerator.ingestion.host}
           paths:
-            - path: /*
+            - path: "/*"
       tls:
         - hosts:
             - ${streamx.accelerator.ingestion.host}
-          secretName: rest-ingestion.crt
+          secretName: wildcard-streamx-cloud.crt
 delivery:
   blueprint-web:
     ingress:
       enabled: true
+      ingressClassName: "istio"
       hosts:
         - host: ${streamx.accelerator.web.host}
           paths:
             - servicePort: 8084
-              path: /*
+              path: "/*"
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: delivery.crt
-      annotations:
-        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
+          secretName: wildcard-streamx-cloud.crt
     components:
       webserver:
         probes:
@@ -116,16 +113,15 @@ delivery:
   blueprint-search:
     ingress:
       enabled: true
+      ingressClassName: "istio"
       hosts:
         - host: ${streamx.accelerator.web.host}
           paths:
-            - path: /search/*
+            - path: "/search/*"
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: delivery.crt
-      annotations:
-        cert-manager.io/cluster-issuer: "lets-encrypt-staging-cluster-issuer"
+          secretName: wildcard-streamx-cloud.crt
     components:
       opensearch:
         sidecar: false

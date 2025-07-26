@@ -1,17 +1,17 @@
 #!/bin/bash
 
 STREAMX_CLOUD_INFRA_PATH=$1
-PROJECT=${2:-ds-www-streamx-dev}
+PROJECT=${2:-ds-puresight}
 
 echo "Deploying to main cluster"
 export QUARKUS_PROFILE=sxcloud
-export KUBECONFIG="$STREAMX_CLOUD_INFRA_PATH/environments/prod/sow/.env/sow-kubeconfig.yaml"
+export KUBECONFIG="$STREAMX_CLOUD_INFRA_PATH/clusters/master/streamx-cloud-master_kubeconfig.yaml"
 streamx deploy -n "$PROJECT" -f mesh/mesh.yaml
 echo "Deployment to main cluster complete."
 
 
-# List of edge regions
-EDGE_REGIONS=("hetzner_hillsboro" "alicloud_shanghai" "tencent_guangzhou")
+# List of edge regions (TODO)
+EDGE_REGIONS=()
 
 export QUARKUS_PROFILE=sxcloud-edge
 
