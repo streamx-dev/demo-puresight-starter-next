@@ -21,14 +21,11 @@ spec:
         hosts:
           - demo-puresight-starter.streamx.site
         paths:
-          - /edge-delivery-services-demo/*
           - /assets/images/avatars/*
           - /blocks/*
           - /components/*
           - /fonts/*
           - /libs/*
-          - /scripts/*
-          - /styles/*
           - /placeholders.json
           - /templates/*
           - /media*.png*
