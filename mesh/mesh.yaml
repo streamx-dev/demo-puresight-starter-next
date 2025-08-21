@@ -223,6 +223,20 @@ processing:
       indexable-resource-fragments:
         topic: outboxes/indexable-resource-fragments
 
+  blueprint-scheduled-eds-index:
+    image: scheduled-resource-processing-service:2.0.8-SNAPSHOT-jvm
+    incoming:
+      scheduling-triggers:
+        topic: inboxes/web-resources
+    outgoing:
+      fetched-resources:
+        topic: outboxes/web-resources
+    environment:
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_FETCHER: "eds"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://blog.arborydigital.com"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+
 delivery:
   blueprint-search:
     image: opensearch-delivery-service
