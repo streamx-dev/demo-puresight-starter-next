@@ -1,5 +1,5 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
-defaultImageTag: 2.0.7-jvm
+defaultImageTag: 2.0.8-SNAPSHOT-jvm
 
 sources:
   github:
@@ -76,7 +76,7 @@ processing:
         topic: inboxes/pages
     outgoing:
       relayed-messages:
-        topic: relays/pages
+        topic: relays/pages-for-external-resources-processing-service
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
@@ -104,6 +104,32 @@ processing:
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
+
+  blueprint-external-resources:
+    image: external-resources-processing-service
+    incoming:
+      incoming-pages:
+        topic: relays/pages-for-external-resources-processing-service
+      incoming-download-requests:
+        topic: relays/download-requests
+      incoming-download-responses:
+        topic: relays/download-responses
+    outgoing:
+      outgoing-pages:
+        topic: relays/pages
+      outgoing-assets:
+        topic: outboxes/assets
+      outgoing-download-requests:
+        topic: relays/download-requests
+      outgoing-download-responses:
+        topic: relays/download-responses
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://www.streamx.dev/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_PROCESSABLE_RESOURCE_KEY_PATTERN: "(.*\\.html$|.*\\.css$|.*\\.js$)"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_PROCESSABLE_RESOURCE_KEY_PATTERN: ".*\\.xml$"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
 
   blueprint-image-optimization:
     image: image-optimization-processing-service
@@ -224,7 +250,7 @@ processing:
         topic: outboxes/indexable-resource-fragments
 
   blueprint-scheduled-eds-index:
-    image: scheduled-resource-processing-service:2.0.8-SNAPSHOT-jvm
+    image: scheduled-resource-processing-service
     incoming:
       scheduling-triggers:
         topic: inboxes/web-resources
