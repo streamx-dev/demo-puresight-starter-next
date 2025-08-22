@@ -110,8 +110,6 @@ processing:
     incoming:
       incoming-pages:
         topic: relays/pages-for-external-resources-processing-service
-      incoming-download-requests:
-        topic: relays/download-requests
       incoming-download-responses:
         topic: relays/download-responses
     outgoing:
@@ -119,8 +117,6 @@ processing:
         topic: relays/pages
       outgoing-assets:
         topic: outboxes/assets
-      outgoing-download-requests:
-        topic: relays/download-requests
       outgoing-download-responses:
         topic: relays/download-responses
     environment:
