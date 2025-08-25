@@ -123,7 +123,7 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_PROCESSABLE_RESOURCE_KEY_PATTERN: ".*"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_PROCESSABLE_RESOURCE_KEY_PATTERN: ".*\\.xml$"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
 
@@ -269,7 +269,6 @@ delivery:
       indexable-resource-fragments:
         topic: outboxes/indexable-resource-fragments
     port: 8082
-    repositoryVolume: "/usr/share/opensearch/data"
     volumesFrom:
       configs:
         - "opensearch/service-init:/deployments/opensearch/service-init"
@@ -280,7 +279,7 @@ delivery:
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/usr/share/opensearch/data"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
     environmentFrom:
       secrets:
         - "opensearch-secrets.properties"
@@ -289,7 +288,6 @@ delivery:
         image: "docker.io/opensearchproject/opensearch:2.16.0"
         ports:
           - 9201:9201
-        repositoryVolume: "/usr/share/opensearch/data"
         environment:
           network.host: "0.0.0.0"
           http.port: "9201"
@@ -314,7 +312,7 @@ delivery:
       STREAMX_URL-INCLUDE-REPLACEMENT-PROVIDER_SSI-INCLUDE-FALLBACK-CONTENT: "<!-- Include Not Found -->"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/srv/www"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
     repositoryVolume: "/srv/www"
     port: 8083
     components:
