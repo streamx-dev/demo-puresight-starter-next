@@ -124,7 +124,7 @@ delivery:
           secretName: wildcard-streamx-cloud.crt
     components:
       opensearch:
-        sidecar: false
+        sidecar: true
         probes:
           readiness:
             httpGet:
