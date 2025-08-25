@@ -258,6 +258,7 @@ processing:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--arbory-dev--arbory-digital-inc.aem.live"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+      QUARKUS_PROFILE: cloud,dev
 
 delivery:
   blueprint-search:
