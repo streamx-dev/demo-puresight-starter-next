@@ -1,0 +1,148 @@
+apiVersion: streamx.dev/v1alpha1
+kind: MeshFederation
+metadata:
+  name: sx
+spec:
+  targets:
+    processing-eu-central-1:
+      priority: 10
+      clusterRole: processing
+      matchClusterNames:
+        - processing-eu-central-1
+      overlay:
+        ingestion:
+          rest-ingestion:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--ingestion.processing-eu-central-1.streamx.cloud
+                  paths:
+                    - path: /*
+              tls:
+                - hosts:
+                    - ds--puresight--ingestion.processing-eu-central-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+    edge-eu-central-1:
+      priority: 10
+      clusterRole: edge
+      matchClusterNames:
+        - edge-eu-central-1
+      overlay:
+        delivery:
+          blueprint-search:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-eu-central-1.streamx.cloud
+                  paths:
+                    - path: /search/*
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-eu-central-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+          blueprint-web:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-eu-central-1.streamx.cloud
+                  paths:
+                    - path: /*
+                      servicePort: 8084
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-eu-central-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            replicas: 2
+    edge-ap-southeast-1:
+      priority: 10
+      clusterRole: edge
+      matchClusterNames:
+        - edge-ap-southeast-1
+      overlay:
+        delivery:
+          blueprint-search:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-ap-southeast-1.streamx.cloud
+                  paths:
+                    - path: /search/*
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-ap-southeast-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+          blueprint-web:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-ap-southeast-1.streamx.cloud
+                  paths:
+                    - path: /*
+                      servicePort: 8084
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-ap-southeast-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            replicas: 2
+    edge-us-east-1:
+      priority: 10
+      clusterRole: edge
+      matchClusterNames:
+        - edge-us-east-1
+      overlay:
+        delivery:
+          blueprint-search:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-us-east-1.streamx.cloud
+                  paths:
+                    - path: /search/*
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-us-east-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+          blueprint-web:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-us-east-1.streamx.cloud
+                  paths:
+                    - path: /*
+                      servicePort: 8084
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-us-east-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            replicas: 2
+    edge-us-west-1:
+      priority: 10
+      clusterRole: edge
+      matchClusterNames:
+        - edge-us-west-1
+      overlay:
+        delivery:
+          blueprint-search:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-us-west-1.streamx.cloud
+                  paths:
+                    - path: /search/*
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-us-west-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+          blueprint-web:
+            ingress:
+              enabled: true
+              hosts:
+                - host: ds--puresight--web.edge-us-west-1.streamx.cloud
+                  paths:
+                    - path: /*
+                      servicePort: 8084
+              tls:
+                - hosts:
+                    - ds--puresight--web.edge-us-west-1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            replicas: 2
