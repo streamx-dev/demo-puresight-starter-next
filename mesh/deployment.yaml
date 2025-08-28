@@ -17,7 +17,6 @@ defaults:
       enabled: true
       minAvailable: 1
 
-
 ingestion:
   rest-ingestion:
     ingress:
@@ -33,6 +32,16 @@ ingestion:
         - hosts:
             - ${streamx.accelerator.ingestion.host}
           secretName: rest-ingestion.crt
+
+processing:
+  blueprint-scheduled-eds-index:
+    stateful: true
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+    replicas: 1
+
 delivery:
   blueprint-web:
     stateful: true

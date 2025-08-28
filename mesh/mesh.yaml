@@ -263,6 +263,11 @@ processing:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--arbory-dev--arbory-digital-inc.aem.live"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_REPEAT_DURATION: "10000"
+      # Keep stores up to date when container inside a pod restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
+      # Temp debug logs enable - finally to be removed
       QUARKUS_PROFILE: cloud,dev
 
 delivery:
