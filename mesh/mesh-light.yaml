@@ -296,7 +296,6 @@ delivery:
         image: "docker.io/opensearchproject/opensearch:2.16.0"
         ports:
           - 9201:9201
-        repositoryVolume: "/usr/share/opensearch/data"
         environment:
           network.host: "0.0.0.0"
           http.port: "9201"

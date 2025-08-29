@@ -81,30 +81,6 @@ processing:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
 
-  blueprint-relay-fragments:
-    image: relay-processing-service
-    incoming:
-      messages:
-        topic: inboxes/fragments
-    outgoing:
-      relayed-messages:
-        topic: relays/fragments
-    environment:
-      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
-      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
-
-  blueprint-outbox-relay-fragments:
-    image: relay-processing-service
-    incoming:
-      messages:
-        topic: relays/fragments
-    outgoing:
-      relayed-messages:
-        topic: outboxes/fragments
-    environment:
-      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
-      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
-
   blueprint-external-resources:
     image: external-resources-processing-service
     incoming:
@@ -116,7 +92,7 @@ processing:
         topic: relays/download-responses
     outgoing:
       outgoing-pages:
-        topic: relays/pages
+        topic: outboxes/pages
       outgoing-web-resources:
         topic: outboxes/web-resources
       outgoing-assets:
@@ -131,95 +107,6 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].image"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
-
-  blueprint-image-optimization:
-    image: image-optimization-processing-service
-    incoming:
-      incoming-assets:
-        topic: inboxes/assets
-      incoming-pages:
-        topic: relays/pages
-    outgoing:
-      optimized-assets:
-        topic: inboxes/assets
-      outgoing-pages:
-        topic: outboxes/pages
-    environmentFrom:
-      configs:
-        - "image-optimization.properties"
-
-  blueprint-json-aggregator:
-    image: json-aggregator-processing-service
-    incoming:
-      data:
-        topic: inboxes/data
-      multivalued-data:
-        topic: inboxes/data
-    outgoing:
-      aggregated-data:
-        topic: relays/aggregated-data
-      aggregated-multivalued-data:
-        topic: inboxes/data
-    environmentFrom:
-      configs:
-        - "aggregator.properties"
-
-  blueprint-message-converter:
-    image: message-converter-processing-service
-    incoming:
-      data:
-        topic: relays/aggregated-data
-    outgoing:
-      indexable-resources:
-        topic: outboxes/indexable-resources
-
-  blueprint-rendering-engine:
-    image: rendering-engine-processing-service
-    incoming:
-      data:
-        topic: relays/aggregated-data,relays/collected-data
-      renderers:
-        topic: inboxes/renderers
-      rendering-contexts:
-        topic: inboxes/rendering-contexts
-      incoming-rendering-requests:
-        topic: relays/rendering-requests
-    outgoing:
-      outgoing-rendering-requests:
-        topic: relays/rendering-requests
-      pages:
-        topic: relays/pages
-      fragments:
-        topic: relays/fragments
-
-  blueprint-composition-engine:
-    image: composition-engine-processing-service
-    incoming:
-      layouts:
-        topic: inboxes/layouts
-      compositions:
-        topic: inboxes/compositions
-      incoming-page-compose-requests:
-        topic: relays/page-compose-requests
-    outgoing:
-      pages:
-        topic: relays/pages
-      outgoing-page-compose-requests:
-        topic: relays/page-compose-requests
-
-  blueprint-data-collector:
-    image: data-collector-processing-service
-    incoming:
-      data:
-        topic: relays/aggregated-data,relays/collected-data
-    outgoing:
-      collected-data:
-        topic: relays/collected-data
-      web-resources:
-        topic: outboxes/web-resources
-    environmentFrom:
-      configs:
-        - "data-collector.properties"
 
   blueprint-sitemap-generator:
     image: sitemap-generator-processing-service
@@ -242,13 +129,9 @@ processing:
     incoming:
       pages:
         topic: relays/pages
-      fragments:
-        topic: relays/fragments
     outgoing:
       indexable-resources:
         topic: outboxes/indexable-resources
-      indexable-resource-fragments:
-        topic: outboxes/indexable-resource-fragments
 
   blueprint-scheduled-eds-index:
     image: scheduled-resource-processing-service
@@ -263,11 +146,9 @@ processing:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--arbory-dev--arbory-digital-inc.aem.live"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
-      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_REPEAT_DURATION: "10000"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
       QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
-      # Temp debug logs enable - finally to be removed
       QUARKUS_PROFILE: cloud,dev
 
 delivery:
@@ -276,8 +157,6 @@ delivery:
     incoming:
       indexable-resources:
         topic: outboxes/indexable-resources
-      indexable-resource-fragments:
-        topic: outboxes/indexable-resource-fragments
     port: 8082
     volumesFrom:
       configs:
@@ -311,8 +190,6 @@ delivery:
     incoming:
       pages:
         topic: outboxes/pages
-      fragments:
-        topic: outboxes/fragments
       assets:
         topic: outboxes/assets
       web-resources:
