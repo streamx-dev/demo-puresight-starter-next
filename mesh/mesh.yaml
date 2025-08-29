@@ -92,7 +92,7 @@ processing:
         topic: relays/download-responses
     outgoing:
       outgoing-pages:
-        topic: outboxes/pages
+        topic: relays/pages
       outgoing-web-resources:
         topic: outboxes/web-resources
       outgoing-assets:
@@ -101,12 +101,28 @@ processing:
         topic: relays/download-responses
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/external,web-resource/static"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/noindex,page/external,web-resource/static"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='twitter:image']/@content"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*/(blocks/|fonts/|icons/|scripts/|styles/|helix-query.yaml).*"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].image"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
+
+  blueprint-image-optimization:
+    image: image-optimization-processing-service
+    incoming:
+      incoming-assets:
+        topic: inboxes/assets
+      incoming-pages:
+        topic: relays/pages
+    outgoing:
+      optimized-assets:
+        topic: inboxes/assets
+      outgoing-pages:
+        topic: outboxes/pages
+    environmentFrom:
+      configs:
+        - "image-optimization.properties"
 
   blueprint-sitemap-generator:
     image: sitemap-generator-processing-service
@@ -140,7 +156,7 @@ processing:
         topic: inboxes/web-resources
     outgoing:
       fetched-resources:
-        topic: outboxes/web-resources
+        topic: relays/web-resources-for-external-resources-processing-service
     environment:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_FETCHER: "eds"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--arbory-dev--arbory-digital-inc.aem.live"
