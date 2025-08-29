@@ -1,7 +1,18 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
-defaultImageTag: 2.0.7-jvm
+defaultImageTag: 2.0.8-SNAPSHOT-jvm
 
 sources:
+  github:
+    outgoing:
+      - "pages"
+      - "fragments"
+      - "assets"
+      - "web-resources"
+      - "data"
+      - "renderers"
+      - "rendering-contexts"
+      - "layouts"
+      - "compositions"
   pim:
     outgoing:
       - "data"
@@ -16,27 +27,23 @@ sources:
       - "rendering-contexts"
       - "layouts"
       - "compositions"
+  eds:
+    outgoing:
+      - "pages"
 
 ingestion:
   rest-ingestion:
     environmentFrom:
       configs:
         - "ingestion.properties"
+    environment:
+      # Ensures that generated tokens would work between cluster restarts
+      STREAMX_SOURCES_GITHUB_ACCEPT_IAT_FROM: "1704067200"
+      STREAMX_SOURCES_PIM_ACCEPT_IAT_FROM: "1704067200"
+      STREAMX_SOURCES_CMS_ACCEPT_IAT_FROM: "1704067200"
+      STREAMX_SOURCES_EDS_ACCEPT_IAT_FROM: "1704067200"
 
 processing:
-  blueprint-data-collector:
-    image: data-collector-processing-service
-    incoming:
-      data:
-        topic: relays/aggregated-data
-    outgoing:
-      collected-data:
-        topic: relays/aggregated-data
-      web-resources:
-        topic: inboxes/web-resources
-    environmentFrom:
-      configs:
-        - "data-collector.properties"
 
   blueprint-relay-web-resources:
     image: relay-processing-service
@@ -45,7 +52,7 @@ processing:
         topic: inboxes/web-resources
     outgoing:
       relayed-messages:
-        topic: outboxes/web-resources
+        topic: relays/web-resources-for-external-resources-processing-service
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "web-resource-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "web-resource-schema"
@@ -69,76 +76,235 @@ processing:
         topic: inboxes/pages
     outgoing:
       relayed-messages:
-        topic: outboxes/pages
+        topic: relays/pages-for-external-resources-processing-service
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
 
-  blueprint-relay-fragments:
-    image: relay-processing-service
+#   blueprint-relay-fragments:
+#     image: relay-processing-service
+#     incoming:
+#       messages:
+#         topic: inboxes/fragments
+#     outgoing:
+#       relayed-messages:
+#         topic: relays/fragments
+#     environment:
+#       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
+#       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
+
+#   blueprint-outbox-relay-fragments:
+#     image: relay-processing-service
+#     incoming:
+#       messages:
+#         topic: relays/fragments
+#     outgoing:
+#       relayed-messages:
+#         topic: outboxes/fragments
+#     environment:
+#       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
+#       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
+
+  blueprint-external-resources:
+    image: external-resources-processing-service
     incoming:
-      messages:
-        topic: inboxes/fragments
+      incoming-pages:
+        topic: relays/pages-for-external-resources-processing-service
+      incoming-web-resources:
+        topic: relays/web-resources-for-external-resources-processing-service
+      incoming-download-responses:
+        topic: relays/download-responses
     outgoing:
-      relayed-messages:
-        topic: outboxes/fragments
+      outgoing-pages:
+        topic: relays/pages
+      outgoing-web-resources:
+        topic: outboxes/web-resources
+      outgoing-assets:
+        topic: outboxes/assets
+      outgoing-download-responses:
+        topic: relays/download-responses
     environment:
-      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
-      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/external,web-resource/static"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='twitter:image']/@content"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*/(blocks/|fonts/|icons/|scripts/|styles/|helix-query.yaml).*"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].image"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
 
-  blueprint-composition-engine:
-    image: composition-engine-processing-service
+#   blueprint-image-optimization:
+#     image: image-optimization-processing-service
+#     incoming:
+#       incoming-assets:
+#         topic: inboxes/assets
+#       incoming-pages:
+#         topic: relays/pages
+#     outgoing:
+#       optimized-assets:
+#         topic: inboxes/assets
+#       outgoing-pages:
+#         topic: outboxes/pages
+#     environmentFrom:
+#       configs:
+#         - "image-optimization.properties"
+
+#   blueprint-json-aggregator:
+#     image: json-aggregator-processing-service
+#     incoming:
+#       data:
+#         topic: inboxes/data
+#       multivalued-data:
+#         topic: inboxes/data
+#     outgoing:
+#       aggregated-data:
+#         topic: relays/aggregated-data
+#       aggregated-multivalued-data:
+#         topic: inboxes/data
+#     environmentFrom:
+#       configs:
+#         - "aggregator.properties"
+
+#   blueprint-message-converter:
+#     image: message-converter-processing-service
+#     incoming:
+#       data:
+#         topic: relays/aggregated-data
+#     outgoing:
+#       indexable-resources:
+#         topic: outboxes/indexable-resources
+
+#   blueprint-rendering-engine:
+#     image: rendering-engine-processing-service
+#     incoming:
+#       data:
+#         topic: relays/aggregated-data,relays/collected-data
+#       renderers:
+#         topic: inboxes/renderers
+#       rendering-contexts:
+#         topic: inboxes/rendering-contexts
+#       incoming-rendering-requests:
+#         topic: relays/rendering-requests
+#     outgoing:
+#       outgoing-rendering-requests:
+#         topic: relays/rendering-requests
+#       pages:
+#         topic: relays/pages
+#       fragments:
+#         topic: relays/fragments
+
+#   blueprint-composition-engine:
+#     image: composition-engine-processing-service
+#     incoming:
+#       layouts:
+#         topic: inboxes/layouts
+#       compositions:
+#         topic: inboxes/compositions
+#       incoming-page-compose-requests:
+#         topic: relays/page-compose-requests
+#     outgoing:
+#       pages:
+#         topic: relays/pages
+#       outgoing-page-compose-requests:
+#         topic: relays/page-compose-requests
+
+#   blueprint-data-collector:
+#     image: data-collector-processing-service
+#     incoming:
+#       data:
+#         topic: relays/aggregated-data,relays/collected-data
+#     outgoing:
+#       collected-data:
+#         topic: relays/collected-data
+#       web-resources:
+#         topic: outboxes/web-resources
+#     environmentFrom:
+#       configs:
+#         - "data-collector.properties"
+
+  blueprint-sitemap-generator:
+    image: sitemap-generator-processing-service
     incoming:
-      layouts:
-        topic: inboxes/layouts
-      compositions:
-        topic: inboxes/compositions
-      incoming-page-compose-requests:
-        topic: relays/page-compose-requests
+      incoming-pages:
+        topic: relays/pages
     outgoing:
+      outgoing-sitemaps:
+        topic: outboxes/web-resources
+    environment:
+      # local test domain, see readme
+      STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_BASE-URL: "${streamx.accelerator.web.url}"
+      STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_OUTPUT-KEY: "/sitemap.xml"
+      STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_OUTPUT-TYPE: "web-resource/sitemap"
+
+  blueprint-indexables-producer:
+    image: indexables-producer-processing-service
+    environment:
+      STREAMX_BLUEPRINTS_INDEXABLES_PRODUCER_PROCESSING_SERVICE_INDEX_FRAGMENTS: "true"
+    incoming:
       pages:
-        topic: inboxes/pages
-      outgoing-page-compose-requests:
-        topic: relays/page-compose-requests
-
-  blueprint-json-aggregator:
-    image: json-aggregator-processing-service
-    incoming:
-      data:
-        topic: inboxes/data
-      multivalued-data:
-        topic: inboxes/data
-    outgoing:
-      aggregated-data:
-        topic: relays/aggregated-data
-      aggregated-multivalued-data:
-        topic: inboxes/data
-    environmentFrom:
-      configs:
-        - "aggregator.properties"
-
-  blueprint-rendering-engine:
-    image: rendering-engine-processing-service
-    incoming:
-      data:
-        topic: relays/aggregated-data
-      renderers:
-        topic: inboxes/renderers
-      rendering-contexts:
-        topic: inboxes/rendering-contexts
-      incoming-rendering-requests:
-        topic: relays/rendering-requests
-    outgoing:
-      outgoing-rendering-requests:
-        topic: relays/rendering-requests
-      pages:
-        topic: outboxes/pages
+        topic: relays/pages
       fragments:
-        topic: outboxes/fragments
+        topic: relays/fragments
+    outgoing:
+      indexable-resources:
+        topic: outboxes/indexable-resources
+      indexable-resource-fragments:
+        topic: outboxes/indexable-resource-fragments
 
-
+  blueprint-scheduled-eds-index:
+    image: scheduled-resource-processing-service
+    incoming:
+      scheduling-triggers:
+        topic: inboxes/web-resources
+    outgoing:
+      fetched-resources:
+        topic: outboxes/web-resources
+    environment:
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_FETCHER: "eds"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--arbory-dev--arbory-digital-inc.aem.live"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+      # Keep stores up to date when container inside a pod restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
+      QUARKUS_PROFILE: cloud,dev
 
 delivery:
+  blueprint-search:
+    image: opensearch-delivery-service
+    incoming:
+      indexable-resources:
+        topic: outboxes/indexable-resources
+      indexable-resource-fragments:
+        topic: outboxes/indexable-resource-fragments
+    port: 8082
+    volumesFrom:
+      configs:
+        - "opensearch/service-init:/deployments/opensearch/service-init"
+    environment:
+      QUARKUS_ELASTICSEARCH_USERNAME: "admin"
+      QUARKUS_ELASTICSEARCH_HOSTS: "blueprint-search.opensearch:9201"
+      STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_MIGRATION-SCRIPT-LOCATIONS: "classpath:opensearch/service-init,file:opensearch/service-init"
+      STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
+      # Keep stores up to date when container inside a pod restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
+    environmentFrom:
+      secrets:
+        - "opensearch-secrets.properties"
+    components:
+      opensearch:
+        image: "docker.io/opensearchproject/opensearch:2.16.0"
+        ports:
+          - 9201:9201
+        repositoryVolume: "/usr/share/opensearch/data"
+        environment:
+          network.host: "0.0.0.0"
+          http.port: "9201"
+          discovery.type: "single-node"
+          DISABLE_SECURITY_PLUGIN: "true"
+        environmentFrom:
+          secrets:
+            - "opensearch-component-secrets.properties"
   blueprint-web:
     image: web-delivery-service
     incoming:
@@ -153,6 +319,9 @@ delivery:
     environment:
       STREAMX_BLUEPRINTS_WEB-DELIVERY-SERVICE_RESOURCES_DIRECTORY: "/srv/www"
       STREAMX_URL-INCLUDE-REPLACEMENT-PROVIDER_SSI-INCLUDE-FALLBACK-CONTENT: "<!-- Include Not Found -->"
+      # Keep stores up to date when container inside a pod restarts
+      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
     repositoryVolume: "/srv/www"
     port: 8083
     components:

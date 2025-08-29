@@ -266,7 +266,7 @@ processing:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_REPEAT_DURATION: "10000"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
       # Temp debug logs enable - finally to be removed
       QUARKUS_PROFILE: cloud,dev
 
@@ -289,7 +289,7 @@ delivery:
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
     environmentFrom:
       secrets:
         - "opensearch-secrets.properties"
@@ -322,7 +322,7 @@ delivery:
       STREAMX_URL-INCLUDE-REPLACEMENT-PROVIDER_SSI-INCLUDE-FALLBACK-CONTENT: "<!-- Include Not Found -->"
       # Keep stores up to date when container inside a pod restarts
       QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
+      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
     repositoryVolume: "/srv/www"
     port: 8083
     components:

@@ -38,7 +38,7 @@ processing:
     stateful: true
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
     replicas: 1
 
@@ -49,7 +49,7 @@ delivery:
       repository-volume:
         size: 10Gi
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
     ingress:
       enabled: true
@@ -120,7 +120,7 @@ delivery:
     stateful: true
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
     ingress:
       enabled: true
