@@ -116,7 +116,7 @@ processing:
         topic: relays/download-responses
     outgoing:
       outgoing-pages:
-        topic: relays/pages
+        topic: outboxes/pages
       outgoing-web-resources:
         topic: outboxes/web-resources
       outgoing-assets:
@@ -242,13 +242,13 @@ processing:
     incoming:
       pages:
         topic: relays/pages
-      fragments:
-        topic: relays/fragments
+#       fragments:
+#         topic: relays/fragments
     outgoing:
       indexable-resources:
         topic: outboxes/indexable-resources
-      indexable-resource-fragments:
-        topic: outboxes/indexable-resource-fragments
+#       indexable-resource-fragments:
+#         topic: outboxes/indexable-resource-fragments
 
   blueprint-scheduled-eds-index:
     image: scheduled-resource-processing-service
@@ -274,8 +274,8 @@ delivery:
     incoming:
       indexable-resources:
         topic: outboxes/indexable-resources
-      indexable-resource-fragments:
-        topic: outboxes/indexable-resource-fragments
+#       indexable-resource-fragments:
+#         topic: outboxes/indexable-resource-fragments
     port: 8082
     volumesFrom:
       configs:
@@ -310,8 +310,8 @@ delivery:
     incoming:
       pages:
         topic: outboxes/pages
-      fragments:
-        topic: outboxes/fragments
+#       fragments:
+#         topic: outboxes/fragments
       assets:
         topic: outboxes/assets
       web-resources:
