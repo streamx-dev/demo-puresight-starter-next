@@ -17,10 +17,10 @@ if [[ ! -f "$KUBECONFIG_FILE" ]]; then
   exit 1
 fi
 
-echo "Deploying to pilot cluster"
+echo "Undeploying from pilot cluster"
 export QUARKUS_PROFILE=cloud
 export KUBECONFIG="$KUBECONFIG_FILE"
 
-streamx deploy -n "$PROJECT" -f mesh/mesh.yaml
+streamx undeploy -n "$PROJECT"
 
-echo "Deployment to pilot cluster complete."
+echo "Undeployment from pilot cluster complete."
