@@ -74,7 +74,7 @@ jobs:
         run: |
           mkdir -p gateway/tls
           mkdir -p mesh/auth
-          
+
           if [ -n "$SX_SEC_AUTH_PRIVATE_KEY" ]; then
             echo "$SX_SEC_AUTH_PRIVATE_KEY" > mesh/auth/sx-sec-auth-private-key.yaml
           fi
@@ -86,7 +86,7 @@ jobs:
           if [ -n "$REST_INGESTION_TLS_CERT" ]; then
             echo "$REST_INGESTION_TLS_CERT" > gateway/tls/rest-ingestion.crt.yaml
           fi
-          
+
           if [ -n "$GRAFANA_TLS_CERT" ]; then
             echo "$GRAFANA_TLS_CERT" > gateway/tls/grafana.crt.yaml
           fi
@@ -138,8 +138,8 @@ jobs:
           echo "kubeconfig_path=$(terraform -chdir=./terraform/azure/platform output -raw kubeconfig_path)" >> $GITHUB_OUTPUT
           echo "streamx_ingress_ip=$(terraform -chdir=./terraform/azure/platform output -raw loadbalancer_ip)" >> $GITHUB_OUTPUT
 
-      - name: "Ingest content"
-        run: terraform/scripts/cloud-publish-all.sh load-init-data=${{ inputs.load_initial_data }}
+#       - name: "Ingest content"
+#         run: terraform/scripts/cloud-publish-all.sh load-init-data=${{ inputs.load_initial_data }}
 
       - name: "Create Job Summary"
         env:
