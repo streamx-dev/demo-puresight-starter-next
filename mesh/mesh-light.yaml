@@ -57,6 +57,18 @@ processing:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "web-resource-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "web-resource-schema"
 
+  blueprint-relay-external-web-resources-to-not-be-processed:
+    image: relay-processing-service
+    incoming:
+      messages:
+        topic: relays/web-resources-to-not-be-processed-by-external-resources-processing-service
+    outgoing:
+      relayed-messages:
+        topic: outboxes/web-resources
+    environment:
+      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "web-resource-schema"
+      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "web-resource-schema"
+
   blueprint-relay-assets:
     image: relay-processing-service
     incoming:
@@ -77,6 +89,18 @@ processing:
     outgoing:
       relayed-messages:
         topic: relays/pages-for-external-resources-processing-service
+    environment:
+      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
+      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
+
+  blueprint-relay-external-pages-to-not-be-processed:
+    image: relay-processing-service
+    incoming:
+      messages:
+        topic: relays/pages-to-not-be-processed-by-external-resources-processing-service
+    outgoing:
+      relayed-messages:
+        topic: outboxes/pages
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
@@ -105,32 +129,64 @@ processing:
 #       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "fragment-schema"
 #       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "fragment-schema"
 
-  blueprint-external-resources:
+  blueprint-external-resources--pages:
     image: external-resources-processing-service
     incoming:
       incoming-pages:
-        topic: relays/pages-for-external-resources-processing-service
-      incoming-web-resources:
-        topic: relays/web-resources-for-external-resources-processing-service
+        topic: relays/pages-for-external-resources-processing-service # from main relay service
+      incoming-resource-processings:
+        topic: relays/resource-processings # internal channel
       incoming-download-responses:
-        topic: relays/download-responses
+        topic: relays/download-responses # internal channel
     outgoing:
-      outgoing-pages:
+      outgoing-external-pages:
+        topic: relays/pages-to-not-be-processed-by-external-resources-processing-service # to be transferred to outboxes/pages by additional instance of relay pages service
+      outgoing-external-web-resources:
+        topic: outboxes/web-resources # no further processing of referenced web resources
+      outgoing-external-assets:
+        topic: outboxes/assets # no further processing of referenced assets
+      outgoing-processed-pages:
         topic: outboxes/pages
-      outgoing-web-resources:
-        topic: outboxes/web-resources
-      outgoing-assets:
-        topic: outboxes/assets
+      outgoing-resource-processings:
+        topic: relays/resource-processings # internal channel
       outgoing-download-responses:
-        topic: relays/download-responses
+        topic: relays/download-responses # internal channel
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/external,web-resource/static"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/noindex,page/blog/external"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='twitter:image']/@content"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*/(blocks/|fonts/|icons/|scripts/|styles/|helix-query.yaml).*"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*(/blocks/|/fonts/|/icons/|/scripts/|/styles/|helix-query\\.yaml|adobe\\.com/|/open\\.spotify\\.com/|\\.linkedin\\.com/|/www\\.hurix\\.com/|/twitter\\.com/|/frame\\.work|youtube\\.com/|youtu\\.be/).*"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
+  blueprint-external-resources--web-resources:
+    image: external-resources-processing-service
+    incoming:
+      incoming-web-resources:
+        topic: relays/web-resources-for-external-resources-processing-service # from main relay service
+      incoming-resource-processings:
+        topic: relays/resource-processings # internal channel
+      incoming-download-responses:
+        topic: relays/download-responses # internal channel
+    outgoing:
+      outgoing-external-pages:
+        topic: relays/pages-for-external-resources-processing-service # should be transferred to the process pages instance
+      outgoing-external-web-resources:
+        topic: relays/web-resources-to-not-be-processed-by-external-resources-processing-service # no further processing for referenced web resources
+      outgoing-external-assets:
+        topic: outboxes/assets # no further processing for referenced assets
+      outgoing-processed-web-resources:
+        topic: outboxes/web-resources
+      outgoing-resource-processings:
+        topic: relays/resource-processings # internal channel
+      outgoing-download-responses:
+        topic: relays/download-responses # internal channel
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "web-resource/static,web-resource/static/external"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].image"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_RESOURCE_DOWNLOAD_TIMEOUT_MILLISECONDS: "5000"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
 #   blueprint-image-optimization:
 #     image: image-optimization-processing-service
