@@ -36,7 +36,6 @@ spec:
                     - >-
                       ds--puresight--web.alicloud-beijing.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
-            replicas: 1
       priority: 10
     edge-ap-southeast-1:
       clusterRole: edge
@@ -67,7 +66,6 @@ spec:
                 - hosts:
                     - ds--puresight--web.edge-ap-southeast-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
-            replicas: 1
       priority: 10
     edge-eu-central-1:
       clusterRole: edge
@@ -98,7 +96,6 @@ spec:
                 - hosts:
                     - ds--puresight--web.edge-eu-central-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
-            replicas: 1
       priority: 10
     edge-us-east-1:
       clusterRole: edge
@@ -129,7 +126,6 @@ spec:
                 - hosts:
                     - ds--puresight--web.edge-us-east-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
-            replicas: 1
       priority: 10
     edge-us-west-1:
       clusterRole: edge
@@ -160,7 +156,6 @@ spec:
                 - hosts:
                     - ds--puresight--web.edge-us-west-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
-            replicas: 1
       priority: 10
     processing-eu-central-1:
       clusterRole: processing

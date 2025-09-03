@@ -22,9 +22,6 @@ ingestion:
   rest-ingestion:
     ingress:
       enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
       hosts:
         - host: ${streamx.accelerator.ingestion.host}
           paths:
@@ -32,7 +29,6 @@ ingestion:
       tls:
         - hosts:
             - ${streamx.accelerator.ingestion.host}
-          secretName: rest-ingestion.crt
 delivery:
   blueprint-web:
     stateful: false
@@ -46,19 +42,8 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-web.crt
-      annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+          secretName: wildcard-streamx-cloud.crt
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
       startup:
         httpGet:
           path: /q/health/started
@@ -67,7 +52,7 @@ delivery:
         timeoutSeconds: 2
         periodSeconds: 10
         successThreshold: 1
-        failureThreshold: 10
+        failureThreshold: 120
     components:
       webserver:
         probes:
@@ -103,6 +88,9 @@ delivery:
             failureThreshold: 3
   blueprint-search:
     stateful: false
+    replicas: 1
+    podDisruptionBudget:
+      enabled: false
     ingress:
       enabled: true
       hosts:
@@ -112,17 +100,8 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-web.crt
+          secretName: wildcard-streamx-cloud.crt
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
       startup:
         httpGet:
           path: /q/health/started
@@ -131,10 +110,14 @@ delivery:
         timeoutSeconds: 2
         periodSeconds: 10
         successThreshold: 1
-        failureThreshold: 10
+        failureThreshold: 120
     components:
       opensearch:
         sidecar: true
+        volumes:
+          opensearch-data:
+            mountPath: /usr/share/opensearch/data
+            size: 10Gi
         probes:
           readiness:
             httpGet:

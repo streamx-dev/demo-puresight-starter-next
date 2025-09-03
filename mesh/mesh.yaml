@@ -1,5 +1,8 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
 defaultImageTag: 2.0.7-jvm
+environment:
+  # Favor throughput and connection quality over latency
+  PULSAR_CLIENT_USETCPNODELAY: "false"
 
 sources:
   github:
@@ -244,7 +247,7 @@ delivery:
         - "opensearch-secrets.properties"
     components:
       opensearch:
-        image: "docker.io/opensearchproject/opensearch:2.16.0"
+        image: "registry.streamx.cloud/streamx-docker-hub-public-proxy/opensearchproject/opensearch:2.16.0"
         ports:
           - 9201:9201
         environment:
@@ -273,7 +276,7 @@ delivery:
     port: 8083
     components:
       webserver:
-        image: "docker.io/library/nginx:1.26.0"
+        image: "registry.streamx.cloud/streamx-docker-hub-public-proxy/library/nginx:1.26.0"
         ports:
           - 8084:80
         repositoryVolume: "/usr/share/nginx/html"
