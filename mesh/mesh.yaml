@@ -130,7 +130,7 @@ processing:
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--arbory-dev--arbory-digital-inc.aem.live/"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog,page/noindex,page/blog/external,web-resource/static"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='twitter:image']/@content,concat(//header@data-header-path, '.plain.html'),concat(//footer@data-footer-path, '.plain.html')"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//a/@href,//link/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='twitter:image']/@content"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*(/blocks/|/fonts/|/icons/|/scripts/|/styles/|helix-query\\.yaml|adobe\\.com/|/open\\.spotify\\.com/|\\.linkedin\\.com/|/www\\.hurix\\.com/|/twitter\\.com/|/frame\\.work|youtube\\.com/|youtu\\.be/).*"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
