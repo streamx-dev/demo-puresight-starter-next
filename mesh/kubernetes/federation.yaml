@@ -2,7 +2,7 @@ apiVersion: streamx.dev/v1alpha1
 kind: MeshFederation
 metadata:
   name: sx
-  namespace: ds-puresight
+  namespace: ds--puresight
 spec:
   targets:
     byoe-edge-alicloud-beijing:
