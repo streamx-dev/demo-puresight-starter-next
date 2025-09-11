@@ -1,5 +1,5 @@
 channel: web-resources
-relativePathLevel: 1
+relativePathLevel: 0
 key: /${relativePath}
 
 properties:
