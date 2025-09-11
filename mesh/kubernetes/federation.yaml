@@ -14,26 +14,26 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.alicloud-beijing.streamx.cloud
+                - host: ds-puresight-web.alicloud-beijing.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
                     - >-
-                      ds-puresight--web.alicloud-beijing.streamx.cloud
+                      ds-puresight-web.alicloud-beijing.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
           blueprint-web:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.alicloud-beijing.streamx.cloud
+                - host: ds-puresight-web.alicloud-beijing.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
                     - >-
-                      ds-puresight--web.alicloud-beijing.streamx.cloud
+                      ds-puresight-web.alicloud-beijing.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     edge-ap-southeast-1:
@@ -46,24 +46,24 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-ap-southeast-1.streamx.cloud
+                - host: ds-puresight-web.edge-ap-southeast-1.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-ap-southeast-1.streamx.cloud
+                    - ds-puresight-web.edge-ap-southeast-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
           blueprint-web:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-ap-southeast-1.streamx.cloud
+                - host: ds-puresight-web.edge-ap-southeast-1.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-ap-southeast-1.streamx.cloud
+                    - ds-puresight-web.edge-ap-southeast-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     edge-eu-central-1:
@@ -76,24 +76,24 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-eu-central-1.streamx.cloud
+                - host: ds-puresight-web.edge-eu-central-1.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-eu-central-1.streamx.cloud
+                    - ds-puresight-web.edge-eu-central-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
           blueprint-web:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-eu-central-1.streamx.cloud
+                - host: ds-puresight-web.edge-eu-central-1.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-eu-central-1.streamx.cloud
+                    - ds-puresight-web.edge-eu-central-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     edge-us-east-1:
@@ -106,24 +106,24 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-us-east-1.streamx.cloud
+                - host: ds-puresight-web.edge-us-east-1.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-us-east-1.streamx.cloud
+                    - ds-puresight-web.edge-us-east-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
           blueprint-web:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-us-east-1.streamx.cloud
+                - host: ds-puresight-web.edge-us-east-1.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-us-east-1.streamx.cloud
+                    - ds-puresight-web.edge-us-east-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     edge-us-west-1:
@@ -136,24 +136,24 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-us-west-1.streamx.cloud
+                - host: ds-puresight-web.edge-us-west-1.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-us-west-1.streamx.cloud
+                    - ds-puresight-web.edge-us-west-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
           blueprint-web:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight--web.edge-us-west-1.streamx.cloud
+                - host: ds-puresight-web.edge-us-west-1.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
-                    - ds-puresight--web.edge-us-west-1.streamx.cloud
+                    - ds-puresight-web.edge-us-west-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     processing-eu-central-1:
@@ -167,12 +167,12 @@ spec:
               enabled: true
               hosts:
                 - host: >-
-                    ds-puresight--ingestion.processing-eu-central-1.streamx.cloud
+                    ds-puresight-ingestion.processing-eu-central-1.streamx.cloud
                   paths:
                     - path: /*
               tls:
                 - hosts:
                     - >-
-                      ds-puresight--ingestion.processing-eu-central-1.streamx.cloud
+                      ds-puresight-ingestion.processing-eu-central-1.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
