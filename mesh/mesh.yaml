@@ -1,5 +1,5 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
-defaultImageTag: 2.0.7-jvm
+defaultImageTag: 2.0.8-jvm
 environment:
   # Favor throughput and connection quality over latency
   PULSAR_CLIENT_USETCPNODELAY: "false"
@@ -33,6 +33,7 @@ sources:
   eds:
     outgoing:
       - "pages"
+      - "web-resources"
 
 ingestion:
   rest-ingestion:
@@ -54,7 +55,7 @@ processing:
         topic: inboxes/web-resources
     outgoing:
       relayed-messages:
-        topic: outboxes/web-resources
+        topic: relays/web-resources
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "web-resource-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "web-resource-schema"
@@ -82,6 +83,59 @@ processing:
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
+
+  blueprint-relay-isolated-pages:
+    image: relay-processing-service
+    incoming:
+      messages:
+        topic: relays/isolated-pages
+    outgoing:
+      relayed-messages:
+        topic: outboxes/pages
+    environment:
+      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
+      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
+
+  pages-dependencies-rewriter:
+    image: external-resources-processing-service:2.0.9-DXP2041-20250912-1035-SNAPSHOT-jvm
+    incoming:
+      incoming-pages:
+        topic: relays/pages
+    outgoing:
+      outgoing-pages:
+        topic: relays/isolated-pages
+      outgoing-web-resources:
+        topic: outboxes/web-resources
+      outgoing-assets:
+        topic: outboxes/assets
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//link[@rel='stylesheet']/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='avatar']/@content"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*(/blocks/|/fonts/|/icons/|/scripts/|/styles/|helix-query\\.yaml|blog\\.json|index\\.json).*"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
+
+  web-resources-dependencies-rewriter:
+    image: external-resources-processing-service:2.0.9-DXP2041-20250912-1035-SNAPSHOT-jvm
+    incoming:
+      incoming-web-resources:
+        topic: relays/web-resources
+    outgoing:
+      outgoing-pages:
+        topic: relays/pages
+      outgoing-web-resources:
+        topic: outboxes/web-resources
+      outgoing-assets:
+        topic: outboxes/assets
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "web-resource/static"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//picture/source/@srcset"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_XML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "/*[local-name()='urlset']/*[local-name()='url']/*[local-name()='loc']"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].img,$.data[*].avatar"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
   blueprint-relay-fragments:
     image: relay-processing-service
@@ -224,6 +278,21 @@ processing:
         topic: outboxes/indexable-resources
       indexable-resource-fragments:
         topic: outboxes/indexable-resource-fragments
+
+  eds-index-fetcher:
+    image: scheduled-resource-processing-service
+    incoming:
+      scheduling-triggers:
+        topic: inboxes/web-resources
+    outgoing:
+      fetched-resources:
+        topic: relays/web-resources
+    environment:
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_FETCHER: "eds"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+      QUARKUS_PROFILE: "cloud,dev"
 
 delivery:
   blueprint-search:
