@@ -1,5 +1,5 @@
 defaultRegistry: ghcr.io/streamx-dev/streamx-blueprints
-defaultImageTag: 2.0.9-jvm
+defaultImageTag: 2.0.11-jvm
 environment:
   # Favor throughput and connection quality over latency
   PULSAR_CLIENT_USETCPNODELAY: "false"
@@ -96,8 +96,8 @@ processing:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
 
-  pages-dependencies-rewriter:
-    image: external-resources-processing-service:2.0.9-DXP2041-20250912-1035-SNAPSHOT-jvm
+  blueprint-pages-dependencies-rewriter:
+    image: external-resources-processing-service
     incoming:
       incoming-pages:
         topic: relays/pages
@@ -116,8 +116,8 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
-  web-resources-dependencies-rewriter:
-    image: external-resources-processing-service:2.0.9-DXP2041-20250912-1035-SNAPSHOT-jvm
+  blueprint-web-resources-dependencies-rewriter:
+    image: external-resources-processing-service
     incoming:
       incoming-web-resources:
         topic: relays/web-resources
@@ -177,17 +177,32 @@ processing:
     image: json-aggregator-processing-service
     incoming:
       data:
-        topic: inboxes/data
+        topic: relays/data
       multivalued-data:
-        topic: inboxes/data
+        topic: relays/data
     outgoing:
       aggregated-data:
         topic: relays/aggregated-data
       aggregated-multivalued-data:
-        topic: inboxes/data
+        topic: relays/data
     environmentFrom:
       configs:
         - "aggregator.properties"
+
+  blueprint-data-external-resources-processor:
+    image: external-resources-processing-service
+    incoming:
+      incoming-data:
+        topic: inboxes/data
+    outgoing:
+      outgoing-data:
+        topic: relays/data
+      outgoing-assets:
+        topic: outboxes/assets
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://magento.test:444/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master,category"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.value,$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.label,$..primaryImage.url,$..gallery.*.url"
 
   blueprint-message-converter:
     image: message-converter-processing-service
@@ -288,7 +303,6 @@ processing:
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
       STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
-      QUARKUS_PROFILE: "cloud,dev"
 
 delivery:
   blueprint-search:
