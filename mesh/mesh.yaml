@@ -133,6 +133,21 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].img,$.data[*].avatar"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
+  blueprint-data-dependencies-rewriter:
+    image: external-resources-processing-service
+    incoming:
+      incoming-data:
+        topic: inboxes/data
+    outgoing:
+      outgoing-data:
+        topic: relays/data
+      outgoing-assets:
+        topic: outboxes/assets
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://master-7rqtwti-rtqdsn7wp5ic2.eu-4.magentosite.cloud/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master,category"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.value,$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.label,$..primaryImage.url,$..gallery.*.url"
+
   blueprint-relay-fragments:
     image: relay-processing-service
     incoming:
@@ -188,21 +203,6 @@ processing:
     environmentFrom:
       configs:
         - "aggregator.properties"
-
-  blueprint-data-external-resources-processor:
-    image: external-resources-processing-service
-    incoming:
-      incoming-data:
-        topic: inboxes/data
-    outgoing:
-      outgoing-data:
-        topic: relays/data
-      outgoing-assets:
-        topic: outboxes/assets
-    environment:
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://magento.test:444/"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master,category"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.value,$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.label,$..primaryImage.url,$..gallery.*.url"
 
   blueprint-message-converter:
     image: message-converter-processing-service
