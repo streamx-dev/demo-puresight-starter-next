@@ -4,11 +4,21 @@ metadata:
   name: sx
 spec:
   targets:
+    default-edge:
+      priority: 20
+      clusterRole: edge
+      overlay:
+        defaults:
+          delivery:
+            storageClassName: "hcloud-volumes"
     byoe-edge-alicloud-beijing:
       clusterRole: edge
       matchClusterNames:
         - byoe-edge-alicloud-beijing
       overlay:
+        defaults:
+          delivery:
+            storageClassName: "alicloud-disk-efficiency"
         delivery:
           blueprint-search:
             ingress:
