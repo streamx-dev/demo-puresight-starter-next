@@ -7,7 +7,7 @@ spec:
     byoc-ds-edge-alicloud-beijing:
       clusterRole: edge
       matchClusterNames:
-        - byoe-edge-alicloud-beijing
+        - byoc-ds-edge-alicloud-beijing
       overlay:
         defaults:
           delivery:
