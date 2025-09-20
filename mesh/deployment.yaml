@@ -33,32 +33,12 @@ ingestion:
             - ${streamx.accelerator.ingestion.host}
 
 processing:
-  blueprint-relay-web-resources:
+  blueprint-composition-engine:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
-  blueprint-relay-assets:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
-  blueprint-relay-pages:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
-  blueprint-relay-isolated-pages:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
-  blueprint-pages-dependencies-rewriter:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
-  blueprint-web-resources-dependencies-rewriter:
+  blueprint-data-collector:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
@@ -68,17 +48,12 @@ processing:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
-  blueprint-relay-fragments:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
-  blueprint-outbox-relay-fragments:
-    volumes:
-      rocksdb:
-        mountPath: "/var/lib/rocksdb"
-        size: 5Gi
   blueprint-image-optimization:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-indexables-producer:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
@@ -89,6 +64,61 @@ processing:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
   blueprint-message-converter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-outbox-relay-fragments:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-pages-dependencies-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-assets:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-fragments:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-isolated-pages:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-pages:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-web-resources:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-rendering-engine:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-sitemap-generator:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-web-resources-dependencies-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  eds-index-fetcher:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"

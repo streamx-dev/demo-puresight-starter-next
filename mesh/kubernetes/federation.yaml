@@ -21,13 +21,13 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight-web.alicloud-beijing.streamx.cloud
+                - host: ds-puresight-web.byoc-ds-edge-alicloud-beijing.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
                     - >-
-                      ds-puresight-web.alicloud-beijing.streamx.cloud
+                      ds-puresight-web.byoc-ds-edge-alicloud-beijing.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
             components:
               opensearch:
@@ -47,14 +47,14 @@ spec:
             ingress:
               enabled: true
               hosts:
-                - host: ds-puresight-web.alicloud-beijing.streamx.cloud
+                - host: ds-puresight-web.byoc-ds-edge-alicloud-beijing.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
                     - >-
-                      ds-puresight-web.alicloud-beijing.streamx.cloud
+                      ds-puresight-web.byoc-ds-edge-alicloud-beijing.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
       priority: 10
     edge-ap-southeast-1:
