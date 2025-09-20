@@ -104,6 +104,10 @@ processing:
     incoming:
       incoming-pages:
         topic: relays/pages
+      incoming-data:
+        topic: relays/fake-data-channel
+      incoming-web-resources:
+        topic: relays/fake-web-resources
     outgoing:
       outgoing-pages:
         topic: relays/isolated-pages
@@ -111,6 +115,8 @@ processing:
         topic: outboxes/web-resources
       outgoing-assets:
         topic: outboxes/assets
+      outgoing-data:
+        topic: relays/fake-data-channel
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog"
@@ -124,11 +130,19 @@ processing:
     incoming:
       incoming-web-resources:
         topic: relays/web-resources
+      incoming-pages:
+        topic: relays/fake-pages-channel
+      incoming-data:
+        topic: relays/fake-data-channel
     outgoing:
       outgoing-web-resources:
         topic: outboxes/web-resources
       outgoing-assets:
         topic: outboxes/assets
+      outgoing-pages:
+        topic: relays/fake-pages-channel
+      outgoing-data:
+        topic: relays/fake-data-channel
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "web-resource/static"
@@ -141,11 +155,19 @@ processing:
     incoming:
       incoming-data:
         topic: inboxes/data
+      incoming-pages:
+        topic: relays/fake-pages-channel
+      incoming-web-resources:
+        topic: relays/fake-web-resources
     outgoing:
       outgoing-data:
         topic: relays/data
       outgoing-assets:
         topic: outboxes/assets
+      outgoing-pages:
+        topic: relays/fake-pages-channel
+      outgoing-web-resources:
+        topic: relays/fake-web-resources-channel
     environment:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://master-7rqtwti-rtqdsn7wp5ic2.eu-4.magentosite.cloud/"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master,category"
