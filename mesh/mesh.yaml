@@ -3,6 +3,9 @@ defaultImageTag: 2.0.11-jvm
 environment:
   # Favor throughput and connection quality over latency
   PULSAR_CLIENT_USETCPNODELAY: "false"
+  # Keep stores up to date when container inside a pod restarts
+  QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
+  QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
 
 sources:
   github:
@@ -321,9 +324,6 @@ delivery:
       QUARKUS_ELASTICSEARCH_HOSTS: "blueprint-search.opensearch:9201"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_MIGRATION-SCRIPT-LOCATIONS: "classpath:opensearch/service-init,file:opensearch/service-init"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
-      # Keep stores up to date when container inside a pod restarts
-      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
     environmentFrom:
       secrets:
         - "opensearch-secrets.properties"
@@ -354,9 +354,6 @@ delivery:
     environment:
       STREAMX_BLUEPRINTS_WEB-DELIVERY-SERVICE_RESOURCES_DIRECTORY: "/srv/www"
       STREAMX_URL-INCLUDE-REPLACEMENT-PROVIDER_SSI-INCLUDE-FALLBACK-CONTENT: "<!-- Include Not Found -->"
-      # Keep stores up to date when container inside a pod restarts
-      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
     repositoryVolume: "/srv/www"
     port: 8083
     components:

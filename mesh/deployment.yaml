@@ -11,8 +11,10 @@ defaults:
       minAvailable: 1
   processing:
     replicas: ${streamx.default.processing.replicas}
+    stateful: true
   delivery:
     replicas: ${streamx.default.delivery.replicas}
+    stateful: true
     podDisruptionBudget:
       enabled: true
       minAvailable: 1
@@ -29,9 +31,71 @@ ingestion:
       tls:
         - hosts:
             - ${streamx.accelerator.ingestion.host}
+
+processing:
+  blueprint-relay-web-resources:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-assets:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-pages:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-isolated-pages:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-pages-dependencies-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-web-resources-dependencies-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-data-dependencies-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-relay-fragments:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-outbox-relay-fragments:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-image-optimization:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-json-aggregator:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+  blueprint-message-converter:
+    volumes:
+      rocksdb:
+        mountPath: "/var/lib/rocksdb"
+        size: 5Gi
+
 delivery:
   blueprint-web:
-    stateful: true
     volumes:
       repository-volume:
         size: 10Gi
@@ -96,7 +160,6 @@ delivery:
     replicas: 1
     podDisruptionBudget:
       enabled: false
-    stateful: true
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
