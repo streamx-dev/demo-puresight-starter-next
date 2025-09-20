@@ -43,7 +43,7 @@ processing:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
-  blueprint-data-dependencies-rewriter:
+  blueprint-data-deps-rewriter:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
@@ -73,7 +73,7 @@ processing:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
-  blueprint-pages-dependencies-rewriter:
+  blueprint-pages-deps-rewriter:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
@@ -113,7 +113,7 @@ processing:
       rocksdb:
         mountPath: "/var/lib/rocksdb"
         size: 5Gi
-  blueprint-web-resources-dependencies-rewriter:
+  blueprint-web-resources-deps-rewriter:
     volumes:
       rocksdb:
         mountPath: "/var/lib/rocksdb"

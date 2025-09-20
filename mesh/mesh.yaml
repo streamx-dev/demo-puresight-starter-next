@@ -99,7 +99,7 @@ processing:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
 
-  blueprint-pages-dependencies-rewriter:
+  blueprint-pages-deps-rewriter:
     image: external-resources-processing-service
     incoming:
       incoming-pages:
@@ -125,7 +125,7 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
-  blueprint-web-resources-dependencies-rewriter:
+  blueprint-web-resources-deps-rewriter:
     image: external-resources-processing-service
     incoming:
       incoming-web-resources:
@@ -150,7 +150,7 @@ processing:
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].img,$.data[*].avatar"
       STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
 
-  blueprint-data-dependencies-rewriter:
+  blueprint-data-deps-rewriter:
     image: external-resources-processing-service
     incoming:
       incoming-data:
