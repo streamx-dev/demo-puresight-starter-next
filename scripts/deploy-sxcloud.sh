@@ -2,7 +2,7 @@
 set -euo pipefail
 
 STREAMX_CLOUD_INFRA_PATH=${1:-}
-PROJECT=${2:-ds-puresight-eb835}
+PROJECT=${2:-so-ds-puresight-bf6dc}
 
 if [[ -z "$STREAMX_CLOUD_INFRA_PATH" ]]; then
   echo "Error: STREAMX_CLOUD_INFRA_PATH not provided."
