@@ -1,7 +1,7 @@
 {
   "rendererKey": { "string": "templates/pdp.html" },
   "dataKeyMatchPattern": { "string": "product:.*" },
-  "dataTypeMatchPattern": null,
+  "dataTypeMatchPattern": { "string": ".*" },
   "outputKeyTemplate": { "string": "/products/{{slug}}.html" },
   "outputTypeTemplate": { "string": "page/product" },
   "outputFormat": { "dev.streamx.blueprints.data.RenderingContext.OutputFormat": "PAGE" }
