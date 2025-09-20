@@ -4,13 +4,6 @@ metadata:
   name: sx
 spec:
   targets:
-    default-edge:
-      priority: 20
-      clusterRole: edge
-      overlay:
-        defaults:
-          delivery:
-            storageClassName: "hcloud-volumes"
     byoe-edge-alicloud-beijing:
       clusterRole: edge
       matchClusterNames:
@@ -51,6 +44,9 @@ spec:
       matchClusterNames:
         - edge-ap-southeast-1
       overlay:
+        defaults:
+          delivery:
+            storageClassName: "hcloud-volumes"
         delivery:
           blueprint-search:
             ingress:
@@ -81,6 +77,9 @@ spec:
       matchClusterNames:
         - edge-eu-central-1
       overlay:
+        defaults:
+          delivery:
+            storageClassName: "hcloud-volumes"
         delivery:
           blueprint-search:
             ingress:
@@ -111,6 +110,9 @@ spec:
       matchClusterNames:
         - edge-us-east-1
       overlay:
+        defaults:
+          delivery:
+            storageClassName: "hcloud-volumes"
         delivery:
           blueprint-search:
             ingress:
@@ -141,6 +143,9 @@ spec:
       matchClusterNames:
         - edge-us-west-1
       overlay:
+        defaults:
+          delivery:
+            storageClassName: "hcloud-volumes"
         delivery:
           blueprint-search:
             ingress:
@@ -171,6 +176,9 @@ spec:
       matchClusterNames:
         - processing-eu-central-1
       overlay:
+        defaults:
+          processing:
+            storageClassName: "hcloud-volumes"
         ingestion:
           rest-ingestion:
             ingress:
