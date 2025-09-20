@@ -4,7 +4,7 @@ metadata:
   name: sx
 spec:
   targets:
-    byoe-edge-alicloud-beijing:
+    byoc-ds-edge-alicloud-beijing:
       clusterRole: edge
       matchClusterNames:
         - byoe-edge-alicloud-beijing
