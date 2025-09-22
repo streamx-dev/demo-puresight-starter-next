@@ -1,7 +1,7 @@
 {
   "rendererKey": { "string": "templates/products-homepage-tiles.html" },
   "dataKeyMatchPattern": { "string": ":collected:products:.*" },
-  "dataTypeMatchPattern": { "string": ".*" },
+  "dataTypeMatchPattern": null,
   "outputKeyTemplate": { "string": "/_fragments/{{key}}.hometiles.html" },
   "outputTypeTemplate": { "string": "fragment/products-tiles" },
   "outputFormat": { "dev.streamx.blueprints.data.RenderingContext.OutputFormat": "FRAGMENT" }
