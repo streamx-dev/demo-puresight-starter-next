@@ -16,7 +16,7 @@ spec:
           blueprint-search:
             volumes:
               rocksdb:
-                mountPath: "/var/lib/rocksdb"
+                mountPath: "${streamx.rocksdb.path}"
                 size: 20Gi
             ingress:
               enabled: true
@@ -39,10 +39,10 @@ spec:
           blueprint-web:
             volumes:
               repository-volume:
-                mountPath: "/var/lib/rocksdb"
+                mountPath: "${streamx.rocksdb.path}"
                 size: 20Gi
               rocksdb:
-                mountPath: "/var/lib/rocksdb"
+                mountPath: "${streamx.rocksdb.path}"
                 size: 20Gi
             ingress:
               enabled: true

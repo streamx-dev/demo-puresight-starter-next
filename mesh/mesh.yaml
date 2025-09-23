@@ -5,7 +5,7 @@ environment:
   PULSAR_CLIENT_USETCPNODELAY: "false"
   # Keep stores up to date when container inside a pod restarts
   QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-  QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "/var/lib/rocksdb"
+  QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
   STREAMX_DELIVERY-SERVICE_READINESS-CHECK_CHANNELS-QUIET-TIME: "5"
 
 sources:
