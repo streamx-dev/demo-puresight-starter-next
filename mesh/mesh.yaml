@@ -240,7 +240,7 @@ processing:
         topic: outboxes/indexable-resources
 
   blueprint-rendering-engine:
-    image: rendering-engine-processing-service
+    image: rendering-engine-processing-service:2.0.13-jvm
     incoming:
       data:
         topic: relays/aggregated-data,relays/collected-data
