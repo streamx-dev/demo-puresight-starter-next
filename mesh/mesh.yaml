@@ -241,8 +241,6 @@ processing:
 
   blueprint-rendering-engine:
     image: rendering-engine-processing-service
-    environment:
-      QUASAR_MESSAGING_STORE_BACKEND: "in-memory"
     incoming:
       data:
         topic: relays/aggregated-data,relays/collected-data
