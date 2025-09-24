@@ -36,92 +36,92 @@ processing:
   blueprint-composition-engine:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-data-collector:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-data-deps-rewriter:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-image-optimization:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-indexables-producer:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-json-aggregator:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-message-converter:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-outbox-relay-fragments:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-pages-deps-rewriter:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-relay-assets:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-relay-fragments:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-relay-isolated-pages:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-relay-pages:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-relay-web-resources:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-rendering-engine:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-sitemap-generator:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   blueprint-web-resources-deps-rewriter:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
   eds-index-fetcher:
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
 
 delivery:
@@ -130,7 +130,7 @@ delivery:
       repository-volume:
         size: 10Gi
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
     ingress:
       enabled: true
@@ -192,7 +192,7 @@ delivery:
       enabled: false
     volumes:
       rocksdb:
-        mountPath: "/var/lib/rocksdb"
+        mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
     ingress:
       enabled: true
