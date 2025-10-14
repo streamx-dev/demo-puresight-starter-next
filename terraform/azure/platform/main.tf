@@ -73,6 +73,8 @@ module "streamx" {
     file("${path.module}/config/pulsar-kaap/values.yaml")
   ]
 
+  pulsar_resources_operator_chart_version = "0.13.0"
+
   streamx_operator_image_pull_secret_registry_email    = var.streamx_operator_image_pull_secret_registry_email
   streamx_operator_image_pull_secret_registry_password = var.streamx_operator_image_pull_secret_registry_password
   streamx_operator_chart_repository_username           = "_json_key_base64"
