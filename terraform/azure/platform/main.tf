@@ -53,16 +53,17 @@ module "grafana_secret" {
   depends_on       = [module.azure_platform]
 }
 
-#module "pulsar_express" {
-#  source            = "/Users/marekczajkowski/workspace/streamx-cloud-infra/modules/pulsar-express"
-#  image             = "ghcr.io/streamx-dev/pulsar-express:latest"
-#  pe_connection_url = "http://pulsar-broker.kaap:8080"
-#
-#  depends_on = [module.azure_platform]
-#}
+module "pulsar_express" {
+  source            = "/Users/marekczajkowski/workspace/streamx-cloud-infra/modules/pulsar-express"
+  image             = "ghcr.io/streamx-dev/pulsar-express:latest"
+  pe_connection_url = "http://pulsar-broker.kaap:8080"
+
+  depends_on = [module.azure_platform]
+}
 
 module "streamx" {
   source  = "streamx-dev/charts/helm"
+  #version = "0.0.15"
   version = "0.1.3"
 
   ingress_controller_nginx_enabled                         = false
@@ -73,6 +74,9 @@ module "streamx" {
     file("${path.module}/config/pulsar-kaap/values.yaml")
   ]
 
+  #streamx_operator_settings = {
+  #  "image.tag" : "0.0.17-jvm"
+  #}
   pulsar_resources_operator_chart_version = "0.13.0"
 
   streamx_operator_image_pull_secret_registry_email    = var.streamx_operator_image_pull_secret_registry_email
