@@ -63,42 +63,7 @@ processing:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
-  blueprint-message-converter:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-outbox-relay-fragments:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
   blueprint-pages-deps-rewriter:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-relay-assets:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-relay-fragments:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-relay-isolated-pages:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-relay-pages:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-relay-web-resources:
     volumes:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
