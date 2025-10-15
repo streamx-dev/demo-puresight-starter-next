@@ -53,13 +53,13 @@ module "grafana_secret" {
   depends_on       = [module.azure_platform]
 }
 
-module "pulsar_express" {
-  source            = "/Users/marekczajkowski/workspace/streamx-cloud-infra/modules/pulsar-express"
-  image             = "ghcr.io/streamx-dev/pulsar-express:latest"
-  pe_connection_url = "http://pulsar-broker.kaap:8080"
-
-  depends_on = [module.azure_platform]
-}
+#module "pulsar_express" {
+#  source            = "/Users/marekczajkowski/workspace/streamx-cloud-infra/modules/pulsar-express"
+#  image             = "ghcr.io/streamx-dev/pulsar-express:latest"
+#  pe_connection_url = "http://pulsar-broker.kaap:8080"
+#
+#  depends_on = [module.azure_platform]
+#}
 
 module "streamx" {
   source  = "streamx-dev/charts/helm"
