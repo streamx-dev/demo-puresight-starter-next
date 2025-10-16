@@ -37,6 +37,7 @@ sources:
   eds:
     outgoing:
       - "pages"
+      - "web-resources"
 
 ingestion:
   rest-ingestion:
@@ -51,7 +52,6 @@ ingestion:
       STREAMX_SOURCES_EDS_ACCEPT_IAT_FROM: "1704067200"
 
 processing:
-
   blueprint-relay-web-resources:
     image: relay-processing-service
     incoming:
@@ -59,7 +59,7 @@ processing:
         topic: inboxes/web-resources
     outgoing:
       relayed-messages:
-        topic: outboxes/web-resources
+        topic: relays/web-resources
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "web-resource-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "web-resource-schema"
@@ -87,6 +87,92 @@ processing:
     environment:
       MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
       MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
+
+  blueprint-relay-isolated-pages:
+    image: relay-processing-service
+    incoming:
+      messages:
+        topic: relays/isolated-pages
+    outgoing:
+      relayed-messages:
+        topic: outboxes/pages
+    environment:
+      MP_MESSAGING_INCOMING_MESSAGES_SCHEMA: "page-schema"
+      MP_MESSAGING_OUTGOING_RELAYED-MESSAGES_SCHEMA: "page-schema"
+
+  blueprint-pages-deps-rewriter:
+    image: external-resources-processing-service
+    incoming:
+      incoming-pages:
+        topic: relays/pages
+      incoming-data:
+        topic: relays/fake-data-channel
+      incoming-web-resources:
+        topic: relays/fake-web-resources
+    outgoing:
+      outgoing-pages:
+        topic: relays/isolated-pages
+      outgoing-web-resources:
+        topic: outboxes/web-resources
+      outgoing-assets:
+        topic: outboxes/assets
+      outgoing-data:
+        topic: relays/fake-data-channel
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "page/blog"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//link[@rel='stylesheet']/@href,//script/@src,//picture/source/@srcset,//meta[@property='og:image' or @name='avatar']/@content"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_URL_EXCLUSIONS_PATTERN: ".*(/blocks/|/fonts/|/icons/|/scripts/|/styles/|helix-query\\.yaml|blog\\.json|index\\.json).*"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_PAGE_PUBLISH_SX_TYPE: "page/blog/external"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
+
+  blueprint-web-resources-deps-rewriter:
+    image: external-resources-processing-service
+    incoming:
+      incoming-web-resources:
+        topic: relays/web-resources
+      incoming-pages:
+        topic: relays/fake-pages-channel
+      incoming-data:
+        topic: relays/fake-data-channel
+    outgoing:
+      outgoing-web-resources:
+        topic: outboxes/web-resources
+      outgoing-assets:
+        topic: outboxes/assets
+      outgoing-pages:
+        topic: relays/fake-pages-channel
+      outgoing-data:
+        topic: relays/fake-data-channel
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "web-resource/static"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_HTML_EXTERNAL_RESOURCE_XPATH_SELECTORS: "//img/@src,//picture/source/@srcset"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$.data[*].img,$.data[*].avatar"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_EXTERNAL_WEB_RESOURCE_PUBLISH_SX_TYPE: "web-resource/static/external"
+
+  blueprint-data-deps-rewriter:
+    image: external-resources-processing-service
+    incoming:
+      incoming-data:
+        topic: inboxes/data
+      incoming-pages:
+        topic: relays/fake-pages-channel
+      incoming-web-resources:
+        topic: relays/fake-web-resources
+    outgoing:
+      outgoing-data:
+        topic: relays/data
+      outgoing-assets:
+        topic: outboxes/assets
+      outgoing-pages:
+        topic: relays/fake-pages-channel
+      outgoing-web-resources:
+        topic: relays/fake-web-resources-channel
+    environment:
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "https://master-7rqtwti-rtqdsn7wp5ic2.eu-4.magentosite.cloud/"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master,category"
+      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.value,$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.label,$..primaryImage.url,$..gallery.*.url"
 
   blueprint-relay-fragments:
     image: relay-processing-service
@@ -127,30 +213,6 @@ processing:
     environmentFrom:
       configs:
         - "image-optimization.properties"
-
-
-  blueprint-data-deps-rewriter:
-    image: external-resources-processing-service
-    incoming:
-      incoming-data:
-        topic: inboxes/data
-      incoming-pages:
-        topic: relays/fake-pages-channel
-      incoming-web-resources:
-        topic: relays/fake-web-resources
-    outgoing:
-      outgoing-data:
-        topic: relays/data
-      outgoing-assets:
-        topic: outboxes/assets
-      outgoing-pages:
-        topic: relays/fake-pages-channel
-      outgoing-web-resources:
-        topic: relays/fake-web-resources-channel
-    environment:
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_BASE_URL_FOR_RELATIVE_PATHS: "${streamx.accelerator.web.url}"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_PROCESSABLE_SX_TYPES: "product/simple,product/master"
-      STREAMX_BLUEPRINTS_EXTERNAL_RESOURCES_PROCESSING_SERVICE_JSON_EXTERNAL_RESOURCE_JSONPATH_SELECTORS: "$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.value,$..attributes[?(@.name=='small_image' || @.name=='thumbnail')].values.*.label,$..primaryImage.url,$..gallery.*.url"
 
   blueprint-json-aggregator:
     image: json-aggregator-processing-service
@@ -235,7 +297,7 @@ processing:
         topic: outboxes/web-resources
     environment:
       # local test domain, see readme
-      STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_BASE-URL: "${streamx.accelerator.web.url}"
+      STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_BASE-URL: "https://www.streamx.tech"
       STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_OUTPUT-KEY: "/sitemap.xml"
       STREAMX_BLUEPRINTS_SITEMAP-GENERATOR-PROCESSING-SERVICE_OUTPUT-TYPE: "web-resource/sitemap"
 
@@ -254,6 +316,20 @@ processing:
       indexable-resource-fragments:
         topic: outboxes/indexable-resource-fragments
 
+  eds-index-fetcher:
+    image: scheduled-resource-processing-service
+    incoming:
+      scheduling-triggers:
+        topic: inboxes/web-resources
+    outgoing:
+      fetched-resources:
+        topic: relays/web-resources
+    environment:
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_FETCHER: "eds"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_ENDPOINT_URL: "https://main--demo-puresight-eds-next--streamx-dev.aem.live/"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_EDS_RESOURCE_NAME_PATTERN: "helix-query.yaml"
+      STREAMX_BLUEPRINTS_SCHEDULED-RESOURCE-PROCESSING-SERVICE_OUTPUT_TYPE: "web-resource/static"
+
 delivery:
   blueprint-search:
     image: opensearch-delivery-service
@@ -271,15 +347,12 @@ delivery:
       QUARKUS_ELASTICSEARCH_HOSTS: "blueprint-search.opensearch:9201"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_MIGRATION-SCRIPT-LOCATIONS: "classpath:opensearch/service-init,file:opensearch/service-init"
       STREAMX_BLUEPRINTS_OPENSEARCH-DELIVERY-SERVICE_TYPE-REQUIRED: "false"
-      # Keep stores up to date when container inside a pod restarts
-      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
     environmentFrom:
       secrets:
         - "opensearch-secrets.properties"
     components:
       opensearch:
-        image: "docker.io/opensearchproject/opensearch:2.16.0"
+        image: "registry.streamx.cloud/streamx-docker-hub-public-proxy/opensearchproject/opensearch:2.16.0"
         ports:
           - 9201:9201
         environment:
@@ -304,14 +377,11 @@ delivery:
     environment:
       STREAMX_BLUEPRINTS_WEB-DELIVERY-SERVICE_RESOURCES_DIRECTORY: "/srv/www"
       STREAMX_URL-INCLUDE-REPLACEMENT-PROVIDER_SSI-INCLUDE-FALLBACK-CONTENT: "<!-- Include Not Found -->"
-      # Keep stores up to date when container inside a pod restarts
-      QUASAR_MESSAGING_STORE_BACKEND: "rocksdb"
-      QUASAR_MESSAGING_STORE_ROCKSDB_PATH: "${streamx.rocksdb.path}"
     repositoryVolume: "/srv/www"
     port: 8083
     components:
       webserver:
-        image: "docker.io/library/nginx:1.26.0"
+        image: "registry.streamx.cloud/streamx-docker-hub-public-proxy/library/nginx:1.26.0"
         ports:
           - 8084:80
         repositoryVolume: "/usr/share/nginx/html"

@@ -24,9 +24,6 @@ ingestion:
   rest-ingestion:
     ingress:
       enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
       hosts:
         - host: ${streamx.accelerator.ingestion.host}
           paths:
@@ -34,29 +31,8 @@ ingestion:
       tls:
         - hosts:
             - ${streamx.accelerator.ingestion.host}
-          secretName: rest-ingestion.crt
 
 processing:
-  blueprint-image-optimization:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-data-deps-rewriter:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-json-aggregator:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
-  blueprint-rendering-engine:
-    volumes:
-      rocksdb:
-        mountPath: "${streamx.rocksdb.path}"
-        size: 5Gi
   blueprint-composition-engine:
     volumes:
       rocksdb:
@@ -67,7 +43,12 @@ processing:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
-  blueprint-sitemap-generator:
+  blueprint-data-deps-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  blueprint-image-optimization:
     volumes:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
@@ -77,9 +58,39 @@ processing:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
         size: 5Gi
+  blueprint-json-aggregator:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  blueprint-pages-deps-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  blueprint-rendering-engine:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  blueprint-sitemap-generator:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  blueprint-web-resources-deps-rewriter:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+  eds-index-fetcher:
+    volumes:
+      rocksdb:
+        mountPath: "${streamx.rocksdb.path}"
+        size: 5Gi
+
 delivery:
   blueprint-web:
-    stateful: true
     volumes:
       repository-volume:
         size: 10Gi
@@ -96,28 +107,17 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-web.crt
-      annotations:
-        cert-manager.io/cluster-issuer: "letsencrypt-cert-cluster-issuer"
+          secretName: wildcard-streamx-cloud.crt
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
       startup:
         httpGet:
-          path: /q/health/started
+          path: /q/health
           port: 8080
         initialDelaySeconds: 10
         timeoutSeconds: 2
         periodSeconds: 10
         successThreshold: 1
-        failureThreshold: 10
+        failureThreshold: 120
     components:
       webserver:
         probes:
@@ -152,7 +152,9 @@ delivery:
             successThreshold: 1
             failureThreshold: 3
   blueprint-search:
-    stateful: true
+    replicas: 1
+    podDisruptionBudget:
+      enabled: false
     volumes:
       rocksdb:
         mountPath: "${streamx.rocksdb.path}"
@@ -166,26 +168,17 @@ delivery:
       tls:
         - hosts:
             - ${streamx.accelerator.web.host}
-          secretName: blueprint-web.crt
+          secretName: wildcard-streamx-cloud.crt
     probes:
-      readiness:
-        httpGet:
-          path: /q/health/ready
-          port: 8080
-        initialDelaySeconds: 3
-        timeoutSeconds: 2
-        periodSeconds: 5
-        successThreshold: 1
-        failureThreshold: 3
       startup:
         httpGet:
-          path: /q/health/started
+          path: /q/health
           port: 8080
         initialDelaySeconds: 10
         timeoutSeconds: 2
         periodSeconds: 10
         successThreshold: 1
-        failureThreshold: 10
+        failureThreshold: 120
     components:
       opensearch:
         sidecar: true

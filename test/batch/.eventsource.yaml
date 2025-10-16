@@ -1,0 +1,12 @@
+channel: compositions
+relativePathLevel: 0
+
+properties:
+  "sx:type": page/content-page
+
+key: /${relativePath}
+payload:
+  content:
+    bytes: file://${payloadPath}
+  layoutKey:
+    string: contentPage.html

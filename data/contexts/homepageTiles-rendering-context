@@ -1,6 +1,6 @@
 {
   "rendererKey": { "string": "templates/products-homepage-tiles.html" },
-  "dataKeyMatchPattern": { "string": ":collected:products:.*" },
+  "dataKeyMatchPattern": { "string": "_collected_products_.*" },
   "dataTypeMatchPattern": null,
   "outputKeyTemplate": { "string": "/_fragments/{{key}}.hometiles.html" },
   "outputTypeTemplate": { "string": "fragment/products-tiles" },

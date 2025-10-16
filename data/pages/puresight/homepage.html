@@ -8,6 +8,19 @@
       <div class="container mx-auto px-8">
         <div class="flex flex-wrap items-center lg:mr-[calc(-50vw+5in)] xl:mr-[calc(-50vw+6in)] 2xl:mr-[calc(-50vw+7in-2rem)]">
           <section class="text-balance py-[32px] inline-flex flex-col flex-1 md:basis-0 md:grow md:shrink">
+            <nav aria-label="Region links" class="pb-6 text-sm md:text-base">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-gray-700">
+                <a href="https://ds-puresight-web.edge-eu-central-1.streamx.cloud/" class="underline hover:no-underline">EU Central</a>
+                <span aria-hidden="true" class="text-gray-400">·</span>
+                <a href="https://ds-puresight-web.edge-ap-southeast-1.streamx.cloud/" class="underline hover:no-underline">AP Southeast 1</a>
+                <span aria-hidden="true" class="text-gray-400">·</span>
+                <a href="https://ds-puresight-web.edge-us-east-1.streamx.cloud/" class="underline hover:no-underline">US East 1</a>
+                <span aria-hidden="true" class="text-gray-400">·</span>
+                <a href="https://ds-puresight-web.edge-us-west-1.streamx.cloud/" class="underline hover:no-underline">US West 1</a>
+                <span aria-hidden="true" class="text-gray-400">·</span>
+                <a href="https://ds-puresight-web.byoc-ds-edge-alicloud-beijing.streamx.cloud/" class="underline hover:no-underline">CN Beijing</a>
+              </div>
+            </nav>
             <h3 id="new-collection" class="font-bold text-[2.5rem] leading-[4rem] xl:text-[4rem] xl:leading-[7rem] pb-5 text-gray-800">New Collection</h3>
             <div class="pb-8">
                 <p class="xl:text-xl text-gray-500">Embrace the journey, and let your personality shine through.</p>
@@ -29,7 +42,7 @@
     </section>
     <!-- Hero banner End -->
 
-    {{#include src="/_fragments/collected:products:cheapest-by-category:Furniture.tiles.html"}}
+{{#include src="/_fragments/_collected_products_cheapest-by-category_Furniture.tiles.html"}}
 
     <!-- Slider section start -->
     <section class="container bg-white mx-auto">
@@ -168,7 +181,7 @@
     <!-- Slider section end -->
 
     <!-- Picked For You -->
-{{#include src="/_fragments/collected:products:cheapest-by-category:Coffee_Tables.hometiles.html"}}
+{{#include src="/_fragments/_collected_products_cheapest-by-category_Coffee_Tables.hometiles.html"}}
     <!-- Picked For You end -->
 
     <!-- Articles section -->
