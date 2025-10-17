@@ -4,6 +4,61 @@ metadata:
   name: sx
 spec:
   targets:
+    byoc-puresight-edge-cn-beijing-alicloud1:
+      clusterRole: edge
+      matchClusterNames:
+        - byoc-puresight-edge-cn-beijing-alicloud1
+      overlay:
+        defaults:
+          delivery:
+            storageClassName: alicloud-disk-efficiency
+        delivery:
+          blueprint-search:
+            components:
+              opensearch:
+                sidecar: true
+                volumes:
+                  opensearch-data:
+                    mountPath: /usr/share/opensearch/data
+                    size: 20Gi
+            ingress:
+              enabled: true
+              hosts:
+                - host: >-
+                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                  paths:
+                    - path: /search/*
+              tls:
+                - hosts:
+                    - >-
+                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            volumes:
+              rocksdb:
+                mountPath: /var/lib/rocksdb
+                size: 20Gi
+          blueprint-web:
+            ingress:
+              enabled: true
+              hosts:
+                - host: >-
+                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                  paths:
+                    - path: /*
+                      servicePort: 8084
+              tls:
+                - hosts:
+                    - >-
+                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                  secretName: wildcard-streamx-cloud.crt
+            volumes:
+              repository-volume:
+                mountPath: /var/lib/rocksdb
+                size: 20Gi
+              rocksdb:
+                mountPath: /var/lib/rocksdb
+                size: 20Gi
+      priority: 10
     byoc-ds-edge-alicloud-beijing:
       clusterRole: edge
       matchClusterNames:
