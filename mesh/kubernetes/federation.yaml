@@ -4,10 +4,10 @@ metadata:
   name: sx
 spec:
   targets:
-    byoc-puresight-edge-cn-beijing-alicloud1:
+    byoc-puresight-edge-cn-beijing-alicloud:
       clusterRole: edge
       matchClusterNames:
-        - byoc-puresight-edge-cn-beijing-alicloud1
+        - byoc-puresight-edge-cn-beijing-alicloud
       overlay:
         defaults:
           delivery:
@@ -25,13 +25,13 @@ spec:
               enabled: true
               hosts:
                 - host: >-
-                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud.streamx.cloud
                   paths:
                     - path: /search/*
               tls:
                 - hosts:
                     - >-
-                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
             volumes:
               rocksdb:
@@ -42,14 +42,14 @@ spec:
               enabled: true
               hosts:
                 - host: >-
-                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                    ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud.streamx.cloud
                   paths:
                     - path: /*
                       servicePort: 8084
               tls:
                 - hosts:
                     - >-
-                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud1.streamx.cloud
+                      ds-puresight-web.byoc-puresight-edge-cn-beijing-alicloud.streamx.cloud
                   secretName: wildcard-streamx-cloud.crt
             volumes:
               repository-volume:
